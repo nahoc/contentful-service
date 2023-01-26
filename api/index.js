@@ -35,9 +35,6 @@ app.post('/upload-image', upload.array('files'), async function (req, res, next)
   const file = req.files[0]
   const fileStream = fs.createReadStream(`/tmp/${file.filename}`)
 
-  console.log('file', file)
-  console.log('fileStream', fileStream)
-
   await client
     .getSpace(CONTENTFUL_SPACE_ID)
     .then((space) => space.getEnvironment(CONTENTFUL_ENVIRONMENT_ID))
@@ -67,7 +64,7 @@ app.post('/upload-image', upload.array('files'), async function (req, res, next)
         if (err) throw err;
       });
 
-      res.status(200)
+      res.status(200).send(asset)
     })
     .catch((err) => {
       res.status(400).send(err)
