@@ -6,9 +6,13 @@ const cors = require('cors');
 const fs = require('fs');
 const bodyParser = require('body-parser');
 const multer = require('multer')
-const upload = multer({
-  dest: 'tmp/'
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, '/tmp')
+  },
 })
+const upload = multer({ storage: storage })
+
 
 const CONTENTFUL_ENVIRONMENT_ID = 'master';
 const CONTENTFUL_SPACE_ID = 'e2z03gbgxg1a';
@@ -29,7 +33,10 @@ app.get("/favicon.ico", (req, res) => {
 
 app.post('/upload-image', upload.array('files'), async function (req, res, next) {
   const file = req.files[0]
-  const fileStream = fs.createReadStream(`./tmp/${file.filename}`)
+  const fileStream = fs.createReadStream(`/tmp/${file.filename}`)
+
+  console.log('file', file)
+  console.log('fileStream', fileStream)
 
   await client
     .getSpace(CONTENTFUL_SPACE_ID)
