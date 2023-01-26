@@ -1,44 +1,69 @@
-const React = require("react");
-const { renderToString } = require("react-dom/server");
-const Avatar = require("boring-avatars").default;
 
-const DEFAULT_COLORS = [
-  "#92A1C6",
-  "#146A7C",
-  "#F0AB3D",
-  "#C271B4",
-  "#C20D90",
-].join(",");
-const DEFAULT_SIZE = 80;
-const DEFAULT_VARIANT = "marble";
-
-const VALID_VARIANTS = new Set([
-  "marble",
-  "beam",
-  "pixel",
-  "sunset",
-  "ring",
-  "bauhaus",
-]);
-
-function normalizeColors(colors) {
-  const colorPalette = colors.split(",");
-
-  if (colorPalette.length) {
-    return colorPalette.map((color) =>
-      color.startsWith("#") ? color : `#${color}`
-    );
-  }
-}
-
+require('dotenv').config()
 const app = require("express")();
+const contentful = require('contentful-management');
+
+
+const CONTENTFUL_ENVIRONMENT_ID = 'master';
+const CONTENTFUL_SPACE_ID = 'e2z03gbgxg1a';
+const client = contentful.createClient({
+  accessToken: process.env.VITE_CONTENTFUL_MANAGEMENT_TOKEN,
+})
+
 
 app.get("/favicon.ico", (req, res) => {
   res.sendStatus(204);
 });
 
-app.get("/:variant?/:size?/:name?", (req, res) => {
-  const { variant = DEFAULT_VARIANT, size = DEFAULT_SIZE } = req.params;
+app.post("/upload-image", async (req, res) => {
+  const files = req.params.files
+  const name = req.params.name
+
+ await contentfulClient
+    .getSpace(CONTENTFUL_SPACE_ID)
+    .then((space) => space.getEnvironment(CONTENTFUL_ENVIRONMENT_ID))
+    .then((environment) =>
+      environment.createAssetFromFiles({
+        fields: {
+          title: {
+            'en-US': files[0].name,
+          },
+          description: {
+            'en-US': name,
+          },
+          file: {
+            'en-US': {
+              contentType: files[0].type,
+              fileName: files[0].name,
+              file: files[0],
+            },
+          },
+        },
+      }),
+    )
+    .then((asset) => asset.processForAllLocales())
+    .then((asset) => asset.publish()).then(() => {
+      res.status(200)
+
+    })
+    .catch((err) => {
+      res.status(400).send(err)
+    });
+    
+    res.end()
+}); 
+ 
+
+app.get("/create", (req, res) => {
+  console.log(req.params)
+  //console.log(client)
+  client.getSpace(CONTENTFUL_SPACE_ID)
+  .then((space) => space.getEnvironments())
+  .then((response) => {
+    console.log(response.items)
+  })
+  .catch(console.error)
+  /*const { variant = DEFAULT_VARIANT, size = DEFAULT_SIZE } = req.params;
   const explicitName = req.query.name || req.params.name;
   const name = explicitName || Math.random().toString();
   const colors = normalizeColors(req.query.colors || DEFAULT_COLORS);
@@ -70,7 +95,7 @@ app.get("/:variant?/:size?/:name?", (req, res) => {
     )
   );
 
-  res.end(svg);
+  res.end(svg);*/
 });
 
 const port = process.env.PORT || 3000;
