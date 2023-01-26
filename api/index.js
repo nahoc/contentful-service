@@ -2,7 +2,6 @@
 require('dotenv').config()
 const app = require("express")();
 const contentful = require('contentful-management');
-const cors = require('cors')
 
 const CONTENTFUL_ENVIRONMENT_ID = 'master';
 const CONTENTFUL_SPACE_ID = 'e2z03gbgxg1a';
@@ -10,11 +9,11 @@ const client = contentful.createClient({
   accessToken: process.env.VITE_CONTENTFUL_MANAGEMENT_TOKEN,
 })
 
-const corsOptions = {
-  origin : ['http://localhost:3000'],
-}
-
-app.use(cors(corsOptions));
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
 
 app.get("/favicon.ico", (req, res) => {
   res.sendStatus(204);
