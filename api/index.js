@@ -7,7 +7,7 @@ const fs = require('fs');
 const bodyParser = require('body-parser');
 const multer = require('multer')
 const upload = multer({
-  dest: 'uploads/'
+  dest: 'tmp/'
 })
 
 const CONTENTFUL_ENVIRONMENT_ID = 'master';
@@ -29,7 +29,7 @@ app.get("/favicon.ico", (req, res) => {
 
 app.post('/upload-image', upload.array('files'), async function (req, res, next) {
   const file = req.files[0]
-  const fileStream = fs.createReadStream(`./uploads/${file.filename}`)
+  const fileStream = fs.createReadStream(`./tmp/${file.filename}`)
 
   await client
     .getSpace(CONTENTFUL_SPACE_ID)
