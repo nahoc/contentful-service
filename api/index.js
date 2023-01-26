@@ -58,7 +58,7 @@ app.post('/upload-image', upload.array('files'), async function (req, res, next)
       }),
     )
     .then((asset) => asset.processForAllLocales())
-    .then((asset) => asset.publish()).then(() => {
+    .then((asset) => asset.publish()).then((asset) => {
       // wipe file from uploads folder
       fs.unlink(file.path, (err) => {
         if (err) throw err;
