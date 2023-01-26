@@ -14,8 +14,6 @@ const storage = multer.diskStorage({
 const upload = multer({
   storage: storage
 })
-
-
 const CONTENTFUL_ENVIRONMENT_ID = 'master';
 const CONTENTFUL_SPACE_ID = 'e2z03gbgxg1a';
 const client = contentful.createClient({
@@ -29,10 +27,7 @@ app.use(cors({
   credentials: true
 }));
 
-app.get("/favicon.ico", (req, res) => {
-  res.sendStatus(204);
-});
-
+// upload image endpoint
 app.post('/upload-image', upload.array('files'), async function (req, res, next) {
   const file = req.files[0]
 
@@ -70,10 +65,35 @@ app.post('/upload-image', upload.array('files'), async function (req, res, next)
 
         res.status(200).send(asset)
       })
-      .catch((err) => {
-        res.status(400).send(err)
-      });
+      .catch((err) => res.status(400).send(err));
   }
+
+  res.end()
+})
+
+// delete project endpoint
+app.delete('/delete-project/:id/:token', async function(req, res) {
+  const idToDelete = req.params.id
+  const signature = req.params.token
+
+  if (!signature) {
+    throw '';
+  }
+
+  await client
+    .getSpace(CONTENTFUL_SPACE_ID)
+    .then((space) => space.getEnvironment(CONTENTFUL_ENVIRONMENT_ID))
+    .then((environment) => environment.getEntry(idToDelete))
+    .then(async (entry) => {
+      if (signature !== entry.fields.signature?.['en-US']) {
+        throw t('You are not authorized to delete this project');
+      }
+
+      return entry.unpublish();
+    })
+    .then((entry) => entry.archive()) // we archive, but say we delete in case they really want to revert
+    .then(() => res.sendStatus(200))
+    .catch((err) => res.status(400).send(err))
 
   res.end()
 })
