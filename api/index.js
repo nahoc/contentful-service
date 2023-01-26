@@ -11,7 +11,9 @@ const storage = multer.diskStorage({
     cb(null, '/tmp')
   },
 })
-const upload = multer({ storage: storage })
+const upload = multer({
+  storage: storage
+})
 
 
 const CONTENTFUL_ENVIRONMENT_ID = 'master';
@@ -33,42 +35,45 @@ app.get("/favicon.ico", (req, res) => {
 
 app.post('/upload-image', upload.array('files'), async function (req, res, next) {
   const file = req.files[0]
-  const fileStream = fs.createReadStream(`/tmp/${file.filename}`)
 
-  await client
-    .getSpace(CONTENTFUL_SPACE_ID)
-    .then((space) => space.getEnvironment(CONTENTFUL_ENVIRONMENT_ID))
-    .then((environment) =>
-      environment.createAssetFromFiles({
-        fields: {
-          title: {
-            'en-US': file.originalname,
-          },
-          description: {
-            'en-US': file.originalname,
-          },
-          file: {
-            'en-US': {
-              contentType: file.mimetype,
-              fileName: file.originalname,
-              file: fileStream,
+  if (file) {
+    const fileStream = fs.createReadStream(`/tmp/${file.filename}`)
+
+    await client
+      .getSpace(CONTENTFUL_SPACE_ID)
+      .then((space) => space.getEnvironment(CONTENTFUL_ENVIRONMENT_ID))
+      .then((environment) =>
+        environment.createAssetFromFiles({
+          fields: {
+            title: {
+              'en-US': file.originalname,
+            },
+            description: {
+              'en-US': file.originalname,
+            },
+            file: {
+              'en-US': {
+                contentType: file.mimetype,
+                fileName: file.originalname,
+                file: fileStream,
+              },
             },
           },
-        },
-      }),
-    )
-    .then((asset) => asset.processForAllLocales())
-    .then((asset) => asset.publish()).then((asset) => {
-      // wipe file from uploads folder
-      fs.unlink(file.path, (err) => {
-        if (err) throw err;
-      });
+        }),
+      )
+      .then((asset) => asset.processForAllLocales())
+      .then((asset) => asset.publish()).then((asset) => {
+        // wipe file from uploads folder
+        fs.unlink(file.path, (err) => {
+          if (err) throw err;
+        });
 
-      res.status(200).send(asset)
-    })
-    .catch((err) => {
-      res.status(400).send(err)
-    });
+        res.status(200).send(asset)
+      })
+      .catch((err) => {
+        res.status(400).send(err)
+      });
+  }
 
   res.end()
 })
