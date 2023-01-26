@@ -11,7 +11,7 @@ const client = contentful.createClient({
 })
 
 app.use(cors({
-    origin: '*'
+  origin: '*'
 }));
 
 app.get("/favicon.ico", (req, res) => {
