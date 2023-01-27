@@ -9,7 +9,7 @@ const multer = require('multer')
 const app = express()
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, 'tmp/')
+    cb(null, '/tmp')
   },
 })
 const upload = multer({
@@ -28,7 +28,7 @@ app.post('/upload-image', upload.array('files'), async function (req, res, next)
   const file = req.files[0]
 
   if (file) {
-    const fileStream = fs.createReadStream(`tmp/${file.filename}`)
+    const fileStream = fs.createReadStream(`/tmp/${file.filename}`)
 
     await client
       .getSpace(CONTENTFUL_SPACE_ID)
