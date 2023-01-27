@@ -21,7 +21,7 @@ const client = contentful.createClient({
   accessToken: process.env.VITE_CONTENTFUL_MANAGEMENT_TOKEN,
 })
 
-app.use(bodyParser.json());
+app.use(bodyParser.text());
 
 // upload image endpoint
 app.post('/upload-image', upload.array('files'), async function (req, res, next) {
@@ -68,12 +68,13 @@ app.post('/upload-image', upload.array('files'), async function (req, res, next)
 })
 
 // delete project endpoint
-app.delete('/delete-project/:id/:sig', async function (req, res) {
+app.delete('/delete-project/:id', async function (req, res) {
+  const body = JSON.parse(req.body)
   const idToDelete = req.params.id
-  const signature = req.params.sig
+  const signature = body.signature
 
   if (!signature) {
-    throw '';
+    throw 'No signature';
   }
 
   await client
@@ -95,13 +96,13 @@ app.delete('/delete-project/:id/:sig', async function (req, res) {
 })
 
 // update project endpoint
-app.post('/update-project/:id/:sig', async function (req, res) {
+app.post('/update-project/:id', async function (req, res) {
+  const body = JSON.parse(req.body)
   const idToUpdate = req.params.id
-  const signature = req.params.sig
-  const body = req.body
+  const signature = body.signature
 
   if (!signature) {
-    throw '';
+    throw 'No signature';
   }
 
   await client
@@ -202,12 +203,12 @@ app.post('/update-project/:id/:sig', async function (req, res) {
 
 
 // create project endpoint
-app.post('/create-project/:sig', async function (req, res) {
-  const signature = req.params.sig
-  const body = req.body
+app.post('/create-project', async function (req, res) {
+  const body = JSON.parse(req.body)
+  const signature = body.signature
 
   if (!signature) {
-    throw '';
+    throw 'No signature';
   }
 
   await client
@@ -342,8 +343,14 @@ app.post('/create-project/:sig', async function (req, res) {
         },
       }),
     )
-    .then(() => res.sendStatus(200))
-    .catch((err) => res.status(400).send(err))
+    .then((entry) => {
+      console.log('entry', entry)
+      return res.sendStatus(200)
+    })
+    .catch((err) => {
+      console.error(err)
+      return res.status(400).send(err)
+    })
 
   res.end()
 })
