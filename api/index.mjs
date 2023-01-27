@@ -1,7 +1,6 @@
 import * as dotenv from 'dotenv'
 import express from "express"
 import contentful from 'contentful-management'
-import cors from 'cors';
 import slugify from '@sindresorhus/slugify';
 import fs from 'fs'
 import bodyParser from 'body-parser'
@@ -25,11 +24,6 @@ const client = contentful.createClient({
 })
 
 app.use(bodyParser.json());
-
-app.use(cors({
-  origin: '*',
-  credentials: true
-}));
 
 // upload image endpoint
 app.post('/upload-image', upload.array('files'), async function (req, res, next) {
