@@ -94,11 +94,6 @@ app.delete('/delete-project/:id/:sig', async function (req, res) {
   res.end()
 })
 
-app.get('/hello', function(req, res) {
-  console.log('hello')
-  res.status(200).send('yooo')
-})
-
 // update project endpoint
 app.post('/update-project/:id/:sig', async function (req, res) {
   const idToUpdate = req.params.id
