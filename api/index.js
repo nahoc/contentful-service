@@ -2,6 +2,7 @@ require('dotenv').config()
 const express = require("express")
 const contentful = require('contentful-management')
 const slugify = require('slugify');
+const cors = require('cors')
 const fs = require('fs')
 const bodyParser = require('body-parser')
 const multer = require('multer')
@@ -20,6 +21,11 @@ const CONTENTFUL_SPACE_ID = 'e2z03gbgxg1a';
 const client = contentful.createClient({
   accessToken: process.env.VITE_CONTENTFUL_MANAGEMENT_TOKEN,
 })
+
+app.use(cors({
+  origin: '*',
+  credentials: true
+}));
 
 app.use(bodyParser.text());
 
@@ -207,7 +213,7 @@ app.post('/create-project', async function (req, res) {
   const body = JSON.parse(req.body)
   const signature = body.signature
 
-  if (!signature) {
+  if (!signature || !body.account) {
     throw 'No signature';
   }
 
@@ -343,10 +349,7 @@ app.post('/create-project', async function (req, res) {
         },
       }),
     )
-    .then((entry) => {
-      console.log('entry', entry)
-      return res.sendStatus(200)
-    })
+    .then((entry) => res.sendStatus(200))
     .catch((err) => {
       console.error(err)
       return res.status(400).send(err)
