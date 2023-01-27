@@ -1,11 +1,15 @@
-require('dotenv').config()
+import * as dotenv from 'dotenv'
+import express from "express"
+import contentful from 'contentful-management'
+import cors from 'cors';
+import slugify from '@sindresorhus/slugify';
+import fs from 'fs'
+import bodyParser from 'body-parser'
+import multer from 'multer'
 
-const app = require("express")();
-const contentful = require('contentful-management');
-const cors = require('cors');
-const fs = require('fs');
-const bodyParser = require('body-parser');
-const multer = require('multer')
+dotenv.config()
+
+const app = express()
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, '/tmp')
@@ -72,9 +76,9 @@ app.post('/upload-image', upload.array('files'), async function (req, res, next)
 })
 
 // delete project endpoint
-app.delete('/delete-project/:id/:token', async function (req, res) {
+app.delete('/delete-project/:id/:sig', async function (req, res) {
   const idToDelete = req.params.id
-  const signature = req.params.token
+  const signature = req.params.sig
 
   if (!signature) {
     throw '';
@@ -99,9 +103,9 @@ app.delete('/delete-project/:id/:token', async function (req, res) {
 })
 
 // update project endpoint
-app.post('/update-project/:id/:token', async function (req, res) {
+app.post('/update-project/:id/:sig', async function (req, res) {
   const idToUpdate = req.params.id
-  const signature = req.params.token
+  const signature = req.params.sig
   const body = req.body
 
   if (!signature) {
@@ -203,6 +207,155 @@ app.post('/update-project/:id/:token', async function (req, res) {
 
   res.end()
 })
+
+
+// create project endpoint
+app.post('/create-project/:sig', async function (req, res) {
+  const signature = req.params.sig
+  const body = req.body
+
+  if (!signature) {
+    throw '';
+  }
+
+  await client
+    .getSpace(CONTENTFUL_SPACE_ID)
+    .then((space) => space.getEnvironment(CONTENTFUL_ENVIRONMENT_ID))
+    .then((environment) =>
+      environment.createEntry('project', {
+        fields: {
+          slug: {
+            'en-US': slugify(body.data.name, {
+              lowercase: true,
+            }),
+          },
+          owner: {
+            'en-US': body.account
+          }, // the 0x address that owns this project submission
+          ...(signature && {
+            signature: {
+              'en-US': signature
+            }
+          }),
+          ...(body.data.color && {
+            color: {
+              'en-US': body.data.color
+            }
+          }),
+          ...(body.data.description && {
+            description: {
+              'en-US': body.data.description
+            }
+          }),
+          ...(body.data.descriptionLong && {
+            descriptionLong: {
+              'en-US': body.data.descriptionLong
+            }
+          }),
+          ...(body.data.discord && {
+            discord: {
+              'en-US': body.data.discord
+            }
+          }),
+          ...(body.data.docs && {
+            docs: {
+              'en-US': body.data.docs
+            }
+          }),
+          ...(body.data.github && {
+            github: {
+              'en-US': body.data.github
+            }
+          }),
+          ...(body.data.medium && {
+            medium: {
+              'en-US': body.data.medium
+            }
+          }),
+          ...(body.data.name && {
+            name: {
+              'en-US': body.data.name
+            }
+          }),
+          ...(body.data.priceTracker && {
+            priceTracker: {
+              'en-US': body.data.priceTracker
+            }
+          }),
+          ...(body.data.reddit && {
+            reddit: {
+              'en-US': body.data.reddit
+            }
+          }),
+          ...(body.data.telegram && {
+            telegram: {
+              'en-US': body.data.telegram
+            }
+          }),
+          ...(body.data.tokenContract && {
+            tokenContract: {
+              'en-US': body.data.tokenContract
+            }
+          }),
+          ...(body.data.twitter && {
+            twitter: {
+              'en-US': body.data.twitter
+            }
+          }),
+          ...(body.data.website && {
+            website: {
+              'en-US': body.data.website
+            }
+          }),
+          ...(body.data.youtube && {
+            youtube: {
+              'en-US': body.data.youtube
+            }
+          }),
+          ...(body.data.tagsIds && {
+            tags: {
+              'en-US': body.data.tagsIds.map((tagId) => ({
+                sys: {
+                  type: 'Link',
+                  linkType: 'Entry',
+                  id: tagId,
+                },
+              })),
+            },
+          }),
+          ...(body.bannerAsset &&
+            body.bannerAsset.fields.file['en-US'] && {
+              banner: {
+                'en-US': {
+                  sys: {
+                    id: body.bannerAsset.sys.id,
+                    linkType: 'Asset',
+                    type: 'Link'
+                  }
+                },
+              },
+            }),
+          ...(body.avatarAsset &&
+            body.avatarAsset.fields.file['en-US'] && {
+              logo: {
+                'en-US': {
+                  sys: {
+                    id: body.avatarAsset.sys.id,
+                    linkType: 'Asset',
+                    type: 'Link'
+                  }
+                },
+              },
+            }),
+        },
+      }),
+    )
+    .then(() => res.sendStatus(200))
+    .catch((err) => res.status(400).send(err))
+
+  res.end()
+})
+
 
 const port = process.env.PORT || 8000;
 
