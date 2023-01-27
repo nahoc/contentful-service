@@ -172,11 +172,11 @@ app.post('/update-project/:id', async function (req, res) {
           })) || entry.fields.tags?.['en-US'],
         };
 
-        if (body.data.bannerAsset) {
+        if (body.bannerAsset) {
           entry.fields.banner = {
             ['en-US']: {
               sys: {
-                id: body.data.bannerAsset.sys.id,
+                id: body.bannerAsset.sys.id,
                 linkType: 'Asset',
                 type: 'Link'
               }
@@ -184,11 +184,11 @@ app.post('/update-project/:id', async function (req, res) {
           };
         }
 
-        if (body.data.avatarAsset) {
+        if (body.avatarAsset) {
           entry.fields.logo = {
             ['en-US']: {
               sys: {
-                id: body.data.avatarAsset.sys.id,
+                id: body.avatarAsset.sys.id,
                 linkType: 'Asset',
                 type: 'Link'
               }
