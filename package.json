@@ -4,13 +4,12 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node ./api/index.mjs"
+    "start": "node ./index.mjs"
   },
   "dependencies": {
     "@sindresorhus/slugify": "2.1.1",
     "body-parser": "1.20.1",
     "contentful-management": "10.27.2",
-    "cors": "2.8.5",
     "dotenv": "16.0.3",
     "express": "4.17.1",
     "multer": "1.4.5-lts.1"
