@@ -87,7 +87,7 @@ app.delete('/delete-project/:id', async function (req, res) {
     .getSpace(CONTENTFUL_SPACE_ID)
     .then((space) => space.getEnvironment(CONTENTFUL_ENVIRONMENT_ID))
     .then((environment) => environment.getEntry(idToDelete))
-    .then(async (entry) => {
+    .then((entry) => {
       if (signature !== entry.fields.signature?.['en-US']) {
         throw t('You are not authorized to delete this project');
       }
