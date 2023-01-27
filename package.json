@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node ./index.mjs"
+    "start": "node ./index.js"
   },
   "dependencies": {
     "@sindresorhus/slugify": "2.1.1",
@@ -12,6 +12,7 @@
     "contentful-management": "10.27.2",
     "dotenv": "16.0.3",
     "express": "4.17.1",
-    "multer": "1.4.5-lts.1"
+    "multer": "1.4.5-lts.1",
+    "slugify": "^1.6.5"
   }
 }

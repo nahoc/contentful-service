@@ -1,12 +1,10 @@
-import * as dotenv from 'dotenv'
-import express from "express"
-import contentful from 'contentful-management'
-import slugify from '@sindresorhus/slugify';
-import fs from 'fs'
-import bodyParser from 'body-parser'
-import multer from 'multer'
-
-dotenv.config()
+require('dotenv').config()
+const express = require("express")
+const contentful = require('contentful-management')
+const slugify = require('slugify');
+const fs = require('fs')
+const bodyParser = require('body-parser')
+const multer = require('multer')
 
 const app = express()
 const storage = multer.diskStorage({
@@ -220,7 +218,7 @@ app.post('/create-project/:sig', async function (req, res) {
         fields: {
           slug: {
             'en-US': slugify(body.data.name, {
-              lowercase: true,
+              lower: true,
             }),
           },
           owner: {
