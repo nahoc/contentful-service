@@ -356,6 +356,9 @@ app.post('/create-project/:sig', async function (req, res) {
   res.end()
 })
 
+app.get("/favicon.ico", (req, res) => {
+  res.sendStatus(204);
+});
 
 const port = process.env.PORT || 8000;
 
