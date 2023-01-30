@@ -369,11 +369,6 @@ app.post('/create-news', async function (req, res) {
     .then((environment) =>
       environment.createEntry('news', {
         fields: {
-          slug: {
-            'en-US': slugify(body.data.name, {
-              lower: true,
-            }),
-          },
           ...(body.data.url && {
             url: {
               'en-US': body.data.url
