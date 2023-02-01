@@ -165,7 +165,7 @@ app.post('/update-project/:id', async function (req, res) {
           ['en-US']: body.data.youtube || entry.fields.youtube?.['en-US']
         };
         entry.fields.tags = {
-          'en-US': lodash.uniqBy([...body.data.tagsIds.filter(o => o.id !== LAUNCHING_SOON_TAG_ID).map((tagId) => ({
+          'en-US': lodash.uniqBy([...body.data.tagsIds.filter(o => o !== LAUNCHING_SOON_TAG_ID).map((tagId) => ({
             sys: {
               type: 'Link',
               linkType: 'Entry',
@@ -177,7 +177,7 @@ app.post('/update-project/:id', async function (req, res) {
               linkType: 'Entry',
               id: LAUNCHING_SOON_TAG_ID,
             }
-          }] : [])], 'id'),
+          }] : [])], 'sys.id'),
         };
 
         if (body.bannerAsset) {
