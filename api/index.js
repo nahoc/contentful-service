@@ -6,6 +6,7 @@ const cors = require('cors')
 const fs = require('fs')
 const bodyParser = require('body-parser')
 const multer = require('multer')
+const lodash = require('lodash')
 
 const app = express()
 const storage = multer.diskStorage({
@@ -164,7 +165,7 @@ app.post('/update-project/:id', async function (req, res) {
           ['en-US']: body.data.youtube || entry.fields.youtube?.['en-US']
         };
         entry.fields.tags = {
-          'en-US': [...body.data.tagsIds.map((tagId) => ({
+          'en-US': lodash.uniqBy([...body.data.tagsIds.filter(o => o.id !== LAUNCHING_SOON_TAG_ID).map((tagId) => ({
             sys: {
               type: 'Link',
               linkType: 'Entry',
@@ -176,7 +177,7 @@ app.post('/update-project/:id', async function (req, res) {
               linkType: 'Entry',
               id: LAUNCHING_SOON_TAG_ID,
             }
-          }] : [])],
+          }] : [])], 'id'),
         };
 
         if (body.bannerAsset) {
