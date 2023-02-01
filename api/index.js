@@ -18,6 +18,7 @@ const upload = multer({
 })
 const CONTENTFUL_ENVIRONMENT_ID = 'master';
 const CONTENTFUL_SPACE_ID = 'e2z03gbgxg1a';
+const LAUNCHING_SOON_TAG_ID = '6aqUeTrvxRNKZsHKV2RHPs'
 const client = contentful.createClient({
   accessToken: process.env.VITE_CONTENTFUL_MANAGEMENT_TOKEN,
 })
@@ -163,13 +164,19 @@ app.post('/update-project/:id', async function (req, res) {
           ['en-US']: body.data.youtube || entry.fields.youtube?.['en-US']
         };
         entry.fields.tags = {
-          ['en-US']: body.data.tagsIds.map((tagId) => ({
+          'en-US': [...body.data.tagsIds.map((tagId) => ({
             sys: {
               type: 'Link',
               linkType: 'Entry',
               id: tagId,
             },
-          })) || entry.fields.tags?.['en-US'],
+          })), ...(body.data.status === 'development' ? [{
+            sys: {
+              type: 'Link',
+              linkType: 'Entry',
+              id: LAUNCHING_SOON_TAG_ID,
+            }
+          }] : [])],
         };
 
         if (body.bannerAsset) {
@@ -313,13 +320,19 @@ app.post('/create-project', async function (req, res) {
           }),
           ...(body.data.tagsIds && {
             tags: {
-              'en-US': body.data.tagsIds.map((tagId) => ({
+              'en-US': [...body.data.tagsIds.map((tagId) => ({
                 sys: {
                   type: 'Link',
                   linkType: 'Entry',
                   id: tagId,
                 },
-              })),
+              })), ...(body.data.status === 'development' ? [{
+                sys: {
+                  type: 'Link',
+                  linkType: 'Entry',
+                  id: LAUNCHING_SOON_TAG_ID,
+                }
+              }] : [])],
             },
           }),
           ...(body.bannerAsset &&
