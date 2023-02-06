@@ -152,6 +152,9 @@ app.post('/update-project/:id', async function (req, res) {
         entry.fields.telegram = {
           ['en-US']: body.data.telegram || entry.fields.telegram?.['en-US']
         };
+        entry.fields.chainId = {
+          ['en-US']: body.data.chainId || entry.fields.chainId?.['en-US']
+        };
         entry.fields.tokenContract = {
           ['en-US']: body.data.tokenContract || entry.fields.tokenContract?.['en-US']
         };
@@ -302,6 +305,11 @@ app.post('/create-project', async function (req, res) {
           ...(body.data.tokenContract && {
             tokenContract: {
               'en-US': body.data.tokenContract
+            }
+          }),
+          ...(body.data.chainId && {
+            chainId: {
+              'en-US': body.data.chainId
             }
           }),
           ...(body.data.twitter && {
