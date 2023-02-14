@@ -433,6 +433,63 @@ app.post('/create-news', async function (req, res) {
   res.end()
 })
 
+// create education article endpoint
+app.post('/create-education-article', async function (req, res) {
+  const body = JSON.parse(req.body)
+
+  await client
+    .getSpace(CONTENTFUL_SPACE_ID)
+    .then((space) => space.getEnvironment(CONTENTFUL_ENVIRONMENT_ID))
+    .then((environment) =>
+      environment.createEntry('educationArticle', {
+        fields: {
+          slug: {
+            'en-US': slugify(body.data.headline, {
+              lower: true,
+            }),
+          },
+          ...(body.data.url && {
+            url: {
+              'en-US': body.data.url
+            }
+          }),
+          ...(body.data.headline && {
+            headline: {
+              'en-US': body.data.headline
+            }
+          }),
+          ...(body.data.thumbnailUrl && {
+            thumbnailUrl: {
+              'en-US': body.data.thumbnailUrl
+            }
+          }),
+          ...(body.data.headline && {
+            headline: {
+              'en-US': body.data.headline
+            }
+          }),
+          ...(body.data.faviconUrl && {
+            faviconUrl: {
+              'en-US': body.data.faviconUrl
+            }
+          }),
+          ...(body.data.providerName && {
+            providerName: {
+              'en-US': body.data.providerName
+            }
+          }),
+        },
+      }),
+    )
+    .then(() => res.sendStatus(200))
+    .catch((err) => {
+      console.error(err)
+      return res.status(400).send(err)
+    })
+
+  res.end()
+})
+
 
 app.get("/favicon.ico", (req, res) => {
   res.sendStatus(204);
