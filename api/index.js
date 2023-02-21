@@ -370,9 +370,7 @@ app.post('/create-project', async function (req, res) {
         },
       }),
     )
-    .then(() => {
-      return      res.sendStatus(200)
-    })
+    .then(() => res.sendStatus(200))
     .catch((err) => {
       console.error(err)
       return res.status(400).send(err)
