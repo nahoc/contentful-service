@@ -236,7 +236,7 @@ app.post('/create-project', async function (req, res) {
           slug: {
             'en-US': slugify(body.data.name, {
               lower: true,
-            }).replace(/./g, ""),
+            }),
           },
           owner: {
             'en-US': body.account
@@ -445,7 +445,7 @@ app.post('/create-education-article', async function (req, res) {
           slug: {
             'en-US': slugify(body.data.headline, {
               lower: true,
-            }).replace(/./g, ""),
+            }),
           },
           ...(body.data.url && {
             url: {
