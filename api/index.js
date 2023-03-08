@@ -166,6 +166,18 @@ app.post('/update-project/:id', async function (req, res) {
         entry.fields.youtube = {
           ['en-US']: body.data.youtube || entry.fields.youtube?.['en-US']
         };
+        entry.fields.linkedIn = {
+          ['en-US']: body.data.linkedIn || entry.fields.linkedIn?.['en-US']
+        };
+        entry.fields.explorer = {
+          ['en-US']: body.data.explorer || entry.fields.explorer?.['en-US']
+        };
+        entry.fields.instagram = {
+          ['en-US']: body.data.instagram || entry.fields.instagram?.['en-US']
+        };
+        entry.fields.facebook = {
+          ['en-US']: body.data.facebook || entry.fields.facebook?.['en-US']
+        };
         entry.fields.tags = {
           'en-US': lodash.uniqBy([...body.data.tagsIds.filter(o => o !== LAUNCHING_SOON_TAG_ID).map((tagId) => ({
             sys: {
@@ -319,6 +331,26 @@ app.post('/create-project', async function (req, res) {
           ...(body.data.website && {
             website: {
               'en-US': body.data.website
+            }
+          }),
+          ...(body.data.explorer && {
+            explorer: {
+              'en-US': body.data.explorer
+            }
+          }),
+          ...(body.data.facebook && {
+            facebook: {
+              'en-US': body.data.facebook
+            }
+          }),
+          ...(body.data.linkedIn && {
+            linkedIn: {
+              'en-US': body.data.linkedIn
+            }
+          }),
+          ...(body.data.instagram && {
+            instagram: {
+              'en-US': body.data.instagram
             }
           }),
           ...(body.data.youtube && {
