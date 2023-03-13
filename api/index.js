@@ -117,9 +117,12 @@ app.post('/update-project/:id', async function (req, res) {
     .then((space) => space.getEnvironment(CONTENTFUL_ENVIRONMENT_ID))
     .then((environment) => environment.getEntry(idToUpdate))
     .then((entry) => {
-      if (signature === entry.fields.signature?.['en-US'] && body.account === entry.fields.owner?.['en-US']) {
+      if (body.account === entry.fields.owner?.['en-US'] && (signature === entry.fields.signature?.['en-US'] || entry.fields.signature?.['en-US'] === 'todo')) {
         entry.fields.color = {
           ['en-US']: body.data.color || entry.fields.color?.['en-US']
+        };
+        entry.fields.signature = {
+          ['en-US']: signature || entry.fields.signature?.['en-US']
         };
         entry.fields.description = {
           ['en-US']: body.data.description || entry.fields.description?.['en-US']
