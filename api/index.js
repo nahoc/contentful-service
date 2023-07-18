@@ -34,6 +34,8 @@ app.use(bodyParser.text());
 // upload image endpoint
 app.post('/upload-image', upload.array('files'), async function (req, res, next) {
   const file = req.files[0]
+  const body = JSON.parse(req.body)
+  const isBanner = body.isBanner === 'true'
 
   if (file) {
     const fileStream = fs.createReadStream(`/tmp/${file.filename}`)
@@ -41,8 +43,8 @@ app.post('/upload-image', upload.array('files'), async function (req, res, next)
         // Resize the image using sharp
         const resizedImage = await sharp(fileStream)
         .resize({
-          width: 256,
-          height: 256,
+          width: isBanner ? 1920 : 256,
+          height: isBanner ? 720 : 256,
           fit: 'inside', // Preserve aspect ratio, fit within specified dimensions
         })
         .toBuffer();
