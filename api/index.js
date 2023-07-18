@@ -114,7 +114,7 @@ app.delete('/delete-project/:id', async function (req, res) {
     .then((space) => space.getEnvironment(CONTENTFUL_ENVIRONMENT_ID))
     .then((environment) => environment.getEntry(idToDelete))
     .then((entry) => {
-      if (signature !== entry.fields.signature ? . ['en-US']) {
+      if (signature !== entry.fields.signature?.['en-US']) {
         throw t('You are not authorized to delete this project');
       }
 
@@ -142,69 +142,69 @@ app.post('/update-project/:id', async function (req, res) {
     .then((space) => space.getEnvironment(CONTENTFUL_ENVIRONMENT_ID))
     .then((environment) => environment.getEntry(idToUpdate))
     .then((entry) => {
-      if (body.account === entry.fields.owner ? . ['en-US'] && (signature === entry.fields.signature ? . ['en-US'] || entry.fields.signature ? . ['en-US'] === 'todo')) {
+      if (body.account === entry.fields.owner?.['en-US'] && (signature === entry.fields.signature?.['en-US'] || entry.fields.signature?.['en-US'] === 'todo')) {
         entry.fields.color = {
-          ['en-US']: body.data.color || entry.fields.color ? . ['en-US']
+          ['en-US']: body.data.color || entry.fields.color?.['en-US']
         };
         entry.fields.signature = {
-          ['en-US']: signature || entry.fields.signature ? . ['en-US']
+          ['en-US']: signature || entry.fields.signature?.['en-US']
         };
         entry.fields.description = {
-          ['en-US']: body.data.description || entry.fields.description ? . ['en-US']
+          ['en-US']: body.data.description || entry.fields.description?.['en-US']
         };
         entry.fields.descriptionLong = {
-          ['en-US']: body.data.descriptionLong || entry.fields.descriptionLong ? . ['en-US']
+          ['en-US']: body.data.descriptionLong || entry.fields.descriptionLong?.['en-US']
         };
         entry.fields.discord = {
-          ['en-US']: body.data.discord || entry.fields.discord ? . ['en-US']
+          ['en-US']: body.data.discord || entry.fields.discord?.['en-US']
         };
         entry.fields.docs = {
-          ['en-US']: body.data.docs || entry.fields.docs ? . ['en-US']
+          ['en-US']: body.data.docs || entry.fields.docs?.['en-US']
         };
         entry.fields.github = {
-          ['en-US']: body.data.github || entry.fields.github ? . ['en-US']
+          ['en-US']: body.data.github || entry.fields.github?.['en-US']
         };
         entry.fields.medium = {
-          ['en-US']: body.data.medium || entry.fields.medium ? . ['en-US']
+          ['en-US']: body.data.medium || entry.fields.medium?.['en-US']
         };
         entry.fields.name = {
-          ['en-US']: body.data.name || entry.fields.name ? . ['en-US']
+          ['en-US']: body.data.name || entry.fields.name?.['en-US']
         };
         entry.fields.priceTracker = {
-          ['en-US']: body.data.priceTracker || entry.fields.priceTracker ? . ['en-US']
+          ['en-US']: body.data.priceTracker || entry.fields.priceTracker?.['en-US']
         };
         entry.fields.reddit = {
-          ['en-US']: body.data.reddit || entry.fields.reddit ? . ['en-US']
+          ['en-US']: body.data.reddit || entry.fields.reddit?.['en-US']
         };
         entry.fields.telegram = {
-          ['en-US']: body.data.telegram || entry.fields.telegram ? . ['en-US']
+          ['en-US']: body.data.telegram || entry.fields.telegram?.['en-US']
         };
         entry.fields.chainId = {
-          ['en-US']: body.data.chainId || entry.fields.chainId ? . ['en-US']
+          ['en-US']: body.data.chainId || entry.fields.chainId?.['en-US']
         };
         entry.fields.tokenContract = {
-          ['en-US']: body.data.tokenContract || entry.fields.tokenContract ? . ['en-US']
+          ['en-US']: body.data.tokenContract || entry.fields.tokenContract?.['en-US']
         };
         entry.fields.twitter = {
-          ['en-US']: body.data.twitter || entry.fields.twitter ? . ['en-US']
+          ['en-US']: body.data.twitter || entry.fields.twitter?.['en-US']
         };
         entry.fields.website = {
-          ['en-US']: body.data.website || entry.fields.website ? . ['en-US']
+          ['en-US']: body.data.website || entry.fields.website?.['en-US']
         };
         entry.fields.youtube = {
-          ['en-US']: body.data.youtube || entry.fields.youtube ? . ['en-US']
+          ['en-US']: body.data.youtube || entry.fields.youtube?.['en-US']
         };
         entry.fields.linkedIn = {
-          ['en-US']: body.data.linkedIn || entry.fields.linkedIn ? . ['en-US']
+          ['en-US']: body.data.linkedIn || entry.fields.linkedIn?.['en-US']
         };
         entry.fields.explorer = {
-          ['en-US']: body.data.explorer || entry.fields.explorer ? . ['en-US']
+          ['en-US']: body.data.explorer || entry.fields.explorer?.['en-US']
         };
         entry.fields.instagram = {
-          ['en-US']: body.data.instagram || entry.fields.instagram ? . ['en-US']
+          ['en-US']: body.data.instagram || entry.fields.instagram?.['en-US']
         };
         entry.fields.facebook = {
-          ['en-US']: body.data.facebook || entry.fields.facebook ? . ['en-US']
+          ['en-US']: body.data.facebook || entry.fields.facebook?.['en-US']
         };
         entry.fields.tags = {
           'en-US': lodash.uniqBy([...body.data.tagsIds.filter(o => o !== LAUNCHING_SOON_TAG_ID).map((tagId) => ({
