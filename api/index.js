@@ -34,7 +34,7 @@ app.use(bodyParser.text());
 // upload image endpoint
 app.post('/upload-image', upload.array('files'), async function (req, res, next) {
   const file = req.files[0]
-  const body = JSON.parse(req.body)
+  const body = req.body
   const isBanner = body.isBanner === 'true'
 
   if (file) {
