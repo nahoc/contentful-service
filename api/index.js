@@ -6,6 +6,7 @@ const cors = require('cors')
 const fs = require('fs')
 const bodyParser = require('body-parser')
 const multer = require('multer')
+const sharp = require('sharp');
 const lodash = require('lodash')
 const app = express()
 const storage = multer.diskStorage({
