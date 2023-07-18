@@ -37,6 +37,15 @@ app.post('/upload-image', upload.array('files'), async function (req, res, next)
   if (file) {
     const fileStream = fs.createReadStream(`/tmp/${file.filename}`)
 
+        // Resize the image using sharp
+        const resizedImage = await sharp(fileStream)
+        .resize({
+          width: 256,
+          height: 256,
+          fit: 'inside', // Preserve aspect ratio, fit within specified dimensions
+        })
+        .toBuffer();
+
     await client
       .getSpace(CONTENTFUL_SPACE_ID)
       .then((space) => space.getEnvironment(CONTENTFUL_ENVIRONMENT_ID))
@@ -53,7 +62,7 @@ app.post('/upload-image', upload.array('files'), async function (req, res, next)
               'en-US': {
                 contentType: file.mimetype,
                 fileName: file.originalname,
-                file: fileStream,
+                file: resizedImage,
               },
             },
           },
