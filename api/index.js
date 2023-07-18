@@ -5,6 +5,7 @@ const slugify = require('slugify');
 const cors = require('cors')
 const fs = require('fs')
 const bodyParser = require('body-parser')
+const sharp = require('sharp')
 const multer = require('multer')
 const lodash = require('lodash')
 const app = express()
@@ -33,9 +34,20 @@ app.use(bodyParser.text());
 // upload image endpoint
 app.post('/upload-image', upload.array('files'), async function (req, res, next) {
   const file = req.files[0]
+  const isBanner = req.body.isBanner === 'true'
 
   if (file) {
     const fileStream = fs.createReadStream(`/tmp/${file.filename}`)
+
+    const resizePipeline = sharp()
+  .resize({
+    width: isBanner ? 1920 : 256,
+    height: isBanner ? 720 : 256,
+    fit: 'inside', // Preserve aspect ratio, fit within specified dimensions
+  })
+
+  const resizedFileStream = await fileStream.pipe(resizePipeline)
+
 
     await client
       .getSpace(CONTENTFUL_SPACE_ID)
@@ -53,7 +65,7 @@ app.post('/upload-image', upload.array('files'), async function (req, res, next)
               'en-US': {
                 contentType: file.mimetype,
                 fileName: file.originalname,
-                file: fileStream,
+                file: resizedFileStream,
               },
             },
           },
