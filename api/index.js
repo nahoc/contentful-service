@@ -6,7 +6,6 @@ const cors = require('cors')
 const fs = require('fs')
 const bodyParser = require('body-parser')
 const multer = require('multer')
-const sharp = require('sharp');
 const lodash = require('lodash')
 const app = express()
 const storage = multer.diskStorage({
@@ -34,33 +33,9 @@ app.use(bodyParser.text());
 // upload image endpoint
 app.post('/upload-image', upload.array('files'), async function (req, res, next) {
   const file = req.files[0]
-  const body = req.body
-  const isBanner = body.isBanner === 'true'
 
   if (file) {
     const fileStream = fs.createReadStream(`/tmp/${file.filename}`)
-
-    // Get the image dimensions using sharp without modifying the image
-    const imageInfo = await sharp(fileStream).metadata();
-    const {
-      width,
-      height
-    } = imageInfo;
-
-    let resizedImage = fileStream;
-    let resizeCondition = isBanner ? (width > 1920 || height > 720) : (width > 256 || height > 256)
-
-    // Check if the image needs to be resized
-    if (resizeCondition) {
-      // Resize the image using sharp
-      resizedImage = await sharp(fileStream)
-        .resize({
-          width: isBanner ? 1920 : 256,
-          height: isBanner ? 720 : 256,
-          fit: 'inside', // Preserve aspect ratio, fit within specified dimensions
-        })
-        .toBuffer();
-    }
 
     await client
       .getSpace(CONTENTFUL_SPACE_ID)
@@ -78,7 +53,7 @@ app.post('/upload-image', upload.array('files'), async function (req, res, next)
               'en-US': {
                 contentType: file.mimetype,
                 fileName: file.originalname,
-                file: resizedImage,
+                file: fileStream,
               },
             },
           },
