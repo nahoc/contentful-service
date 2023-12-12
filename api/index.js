@@ -432,7 +432,7 @@ app.post('/create-project', async function (req, res) {
 
 
 // create public explorer entry endpoint
-app.post('/create-ethereumvm', async function (req, res) {
+app.post('/create-public-explorer', async function (req, res) {
   console.log('HERE111')
   console.log('req.body', req.body)
   const body = JSON.parse(req.body)
@@ -443,8 +443,12 @@ app.post('/create-ethereumvm', async function (req, res) {
     throw 'No signature';
   }
 
+  let networkTokenContentfulId = ''
+  let subnetContentfulId = ''
+  let ethereumVmContentfulId = ''
+
 // creating eth vm
-  /*await client
+ethereumVmContentfulId = await client
   .getSpace(CHAIN_ASSETS_CONTENTFUL_SPACE_ID)
   .then((space) => space.getEnvironment(CONTENTFUL_ENVIRONMENT_ID))
   .then((environment) => 
@@ -464,13 +468,16 @@ app.post('/create-ethereumvm', async function (req, res) {
         },
       }
     }))
+    .then((contentfulResult) => {
+      return contentfulResult.sys.id
+    })
     .catch((err) => {
       console.error(err)
       return res.status(400).send(err)
-    })*/
+    })
 
 // creating subnet
-  /*await client
+subnetContentfulId = await client
   .getSpace(CHAIN_ASSETS_CONTENTFUL_SPACE_ID)
   .then((space) => space.getEnvironment(CONTENTFUL_ENVIRONMENT_ID))
   .then((environment) => 
@@ -490,13 +497,16 @@ app.post('/create-ethereumvm', async function (req, res) {
         },
       }
     })
+    .then((contentfulResult) => {
+      return contentfulResult.sys.id
+    })
     .catch((err) => {
       console.error(err)
       return res.status(400).send(err)
-    }))*/
+    }))
 
 // creating network token
-  /*await client
+networkTokenContentfulId = await client
   .getSpace(CHAIN_ASSETS_CONTENTFUL_SPACE_ID)
   .then((space) => space.getEnvironment(CONTENTFUL_ENVIRONMENT_ID))
   .then((environment) => 
@@ -531,10 +541,13 @@ app.post('/create-ethereumvm', async function (req, res) {
           }),
       }
     })
+    .then((contentfulResult) => {
+      return contentfulResult.sys.id
+    })
     .catch((err) => {
       console.error(err)
       return res.status(400).send(err)
-    }))*/
+    }))
 
 
 // creating testnet chain
@@ -556,20 +569,51 @@ app.post('/create-ethereumvm', async function (req, res) {
         coreUriSlug: {
           'en-US': slugify(body.coreUriSlug, {
             lower: true,
-          }),
+          }).replaceAll("'", ""),
         },
         explorerUrl: {
           'en-US': `https://subnets-test.avax.network/${slugify(body.coreUriSlug, {
             lower: true,
-          })}`,
+          }).replaceAll("'", "")}`,
         },
-        isTestnet: true,
-        showInPublicCoreProperties: false,//TODO: change this whenever we're ready
+        isTestnet: {
+          'en-US': true
+        },
+        showInPublicCoreProperties: {
+          'en-US': false,//TODO: change this whenever we're ready
+        },
         primaryColor: {
           'en-US': body.primaryColor
         },
         officialSite: {
           'en-US': body.officialSite
+        },
+        networkToken: {
+          ['en-US']: {
+            sys: {
+              id: networkTokenContentfulId, 
+              linkType: 'Entry',
+              type: 'Link'
+            }
+          }
+        },
+        vmInfo: {
+          ['en-US']: {
+            sys: {
+              id: ethereumVmContentfulId, 
+              linkType: 'Entry',
+              type: 'Link'
+            }
+          }
+        },
+        subnetInfo: {
+          ['en-US']: {
+            sys: {
+              id: subnetContentfulId, 
+              linkType: 'Entry',
+              type: 'Link'
+            }
+          }
         },
         ...(body.avatarAsset &&
           body.avatarAsset.fields.file['en-US'] && {
