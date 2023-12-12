@@ -567,14 +567,14 @@ networkTokenContentfulId = await client
           'en-US': body.description
         },
         coreUriSlug: {
-          'en-US': slugify(body.coreUriSlug, {
+          'en-US': slugify(body.coreUriSlug.replaceAll("'", ""), {
             lower: true,
-          }).replaceAll("'", ""),
+          }),
         },
         explorerUrl: {
-          'en-US': `https://subnets-test.avax.network/${slugify(body.coreUriSlug, {
+          'en-US': `https://subnets-test.avax.network/${slugify(body.coreUriSlug.replaceAll("'", ""), {
             lower: true,
-          }).replaceAll("'", "")}`,
+          })}`,
         },
         isTestnet: {
           'en-US': true
