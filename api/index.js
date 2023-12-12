@@ -17,12 +17,15 @@ const storage = multer.diskStorage({
 const upload = multer({
   storage: storage
 })
+
 const CONTENTFUL_ENVIRONMENT_ID = 'master';
 const CONTENTFUL_SPACE_ID = 'e2z03gbgxg1a';
+const CHAIN_ASSETS_CONTENTFUL_SPACE_ID = 'gcj8jwzm6086';
 const LAUNCHING_SOON_TAG_ID = '6aqUeTrvxRNKZsHKV2RHPs'
 const client = contentful.createClient({
   accessToken: process.env.VITE_CONTENTFUL_MANAGEMENT_TOKEN,
 })
+
 
 app.use(cors({
   origin: '*',
@@ -35,6 +38,7 @@ app.use(bodyParser.text());
 app.post('/upload-image', upload.array('files'), async function (req, res, next) {
   const file = req.files[0]
   const isBanner = req.body.isBanner === 'true'
+  const isChainAssets = req.body.isChainAssets === 'true'
 
   if (file) {
     const fileStream = fs.createReadStream(`/tmp/${file.filename}`)
@@ -50,7 +54,7 @@ app.post('/upload-image', upload.array('files'), async function (req, res, next)
 
 
     await client
-      .getSpace(CONTENTFUL_SPACE_ID)
+      .getSpace(isChainAssets ? CHAIN_ASSETS_CONTENTFUL_SPACE_ID : CONTENTFUL_SPACE_ID)
       .then((space) => space.getEnvironment(CONTENTFUL_ENVIRONMENT_ID))
       .then((environment) =>
         environment.createAssetFromFiles({
@@ -422,6 +426,170 @@ app.post('/create-project', async function (req, res) {
       console.error(err)
       return res.status(400).send(err)
     })
+
+  res.end()
+})
+
+
+// create public explorer entry endpoint
+app.post('/create-ethereumvm', async function (req, res) {
+  console.log('HERE111')
+  console.log('req.body', req.body)
+  const body = JSON.parse(req.body)
+  console.log('body', req.body)
+  const signature = body.signature
+
+  if (!signature || !body.account) {
+    throw 'No signature';
+  }
+
+// creating eth vm
+  /*await client
+  .getSpace(CHAIN_ASSETS_CONTENTFUL_SPACE_ID)
+  .then((space) => space.getEnvironment(CONTENTFUL_ENVIRONMENT_ID))
+  .then((environment) => 
+    environment.createEntry('ethereumVm', {
+      fields: {
+        evmChainId: {
+          'en-US': body.evmChainId
+        },
+        rpcUrl: {
+          'en-US': body.rpcUrl
+        },
+        multicall3Address: {
+          'en-US': body.multicall3Address
+        },
+        wsUrl: {
+          'en-US': body.wsUrl
+        },
+      }
+    }))
+    .catch((err) => {
+      console.error(err)
+      return res.status(400).send(err)
+    })*/
+
+// creating subnet
+  /*await client
+  .getSpace(CHAIN_ASSETS_CONTENTFUL_SPACE_ID)
+  .then((space) => space.getEnvironment(CONTENTFUL_ENVIRONMENT_ID))
+  .then((environment) => 
+    environment.createEntry('subnet', {
+      fields: {
+        name: {
+          'en-US': body.subnetName
+        },
+        subnetId: {
+          'en-US': body.subnetId
+        },
+        platformChainId: {
+          'en-US': body.platformChainId
+        },
+        vmId: {
+          'en-US': body.vmId
+        },
+      }
+    })
+    .catch((err) => {
+      console.error(err)
+      return res.status(400).send(err)
+    }))*/
+
+// creating network token
+  /*await client
+  .getSpace(CHAIN_ASSETS_CONTENTFUL_SPACE_ID)
+  .then((space) => space.getEnvironment(CONTENTFUL_ENVIRONMENT_ID))
+  .then((environment) => 
+    environment.createEntry('networkToken', {
+      fields: {
+        name: {
+          'en-US': body.tokenName
+        },
+        symbol: {
+          'en-US': body.symbol
+        },
+        decimals: {
+          'en-US': 18
+        },
+        description: {
+          'en-US': body.description
+        },
+        coingeckoCoinId: {
+          'en-US': ''
+        },
+        ...(body.avatarAsset &&
+          body.avatarAsset.fields.file['en-US'] && {
+            logo: {
+              'en-US': {
+                sys: {
+                  id: body.avatarAsset.sys.id,
+                  linkType: 'Asset',
+                  type: 'Link'
+                }
+              },
+            },
+          }),
+      }
+    })
+    .catch((err) => {
+      console.error(err)
+      return res.status(400).send(err)
+    }))*/
+
+
+// creating testnet chain
+  await client
+  .getSpace(CHAIN_ASSETS_CONTENTFUL_SPACE_ID)
+  .then((space) => space.getEnvironment(CONTENTFUL_ENVIRONMENT_ID))
+  .then((environment) => 
+    environment.createEntry('chain', {
+      fields: {
+        name: {
+          'en-US': body.subnetName
+        },
+        shortName: {
+          'en-US': body.subnetName
+        },
+        description: {
+          'en-US': body.description
+        },
+        coreUriSlug: {
+          'en-US': slugify(body.coreUriSlug, {
+            lower: true,
+          }),
+        },
+        explorerUrl: {
+          'en-US': `https://subnets-test.avax.network/${slugify(body.coreUriSlug, {
+            lower: true,
+          })}`,
+        },
+        isTestnet: true,
+        showInPublicCoreProperties: false,//TODO: change this whenever we're ready
+        primaryColor: {
+          'en-US': body.primaryColor
+        },
+        officialSite: {
+          'en-US': body.officialSite
+        },
+        ...(body.avatarAsset &&
+          body.avatarAsset.fields.file['en-US'] && {
+            logo: {
+              'en-US': {
+                sys: {
+                  id: body.avatarAsset.sys.id,
+                  linkType: 'Asset',
+                  type: 'Link'
+                }
+              },
+            },
+          }),
+      }
+    })
+    .then(() => res.sendStatus(200))
+    .catch((err) => {
+      console.error(err)
+      return res.status(400).send(err)
+    }))
 
   res.end()
 })
