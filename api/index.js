@@ -445,7 +445,7 @@ app.post('/create-public-explorer', async function (req, res) {
   let ethereumVmContentfulId = ''
 
 // creating eth vm
-ethereumVmContentfulId = await client
+/*ethereumVmContentfulId = await client
   .getSpace(CHAIN_ASSETS_CONTENTFUL_SPACE_ID)
   .then((space) => space.getEnvironment(CONTENTFUL_ENVIRONMENT_ID))
   .then((environment) => 
@@ -588,7 +588,7 @@ networkTokenContentfulId = await client
     createSocialEntry('Github', body.Github),
     createSocialEntry('Instagram', body.Instagram),
     createSocialEntry('LinkedIn', body.LinkedIn),
-  ]);
+  ]);*/
 
 // creating testnet chain
   await client
@@ -817,17 +817,6 @@ networkTokenContentfulId = await client
             }
           }
         }),
-        ...(coingeckoResourceLink && { 
-          resourceLink: {
-            ['en-US']: {
-              sys: {
-                id: coingeckoResourceLink.sys.id, 
-                linkType: 'Entry',
-                type: 'Link'
-              }
-            }
-          }
-        }),
         ...(blogResourceLink && { 
           resourceLink: {
             ['en-US']: {
@@ -839,25 +828,31 @@ networkTokenContentfulId = await client
             }
           }
         }),
-        networkToken: {
-          ['en-US']: {
-            sys: {
-              id: networkTokenContentfulId, 
-              linkType: 'Entry',
-              type: 'Link'
+        ...(networkTokenContentfulId && { 
+          networkToken: {
+            ['en-US']: {
+              sys: {
+                id: networkTokenContentfulId, 
+                linkType: 'Entry',
+                type: 'Link'
+              }
             }
           }
-        },
-        vmInfo: {
-          ['en-US']: {
-            sys: {
-              id: ethereumVmContentfulId, 
-              linkType: 'Entry',
-              type: 'Link'
+        }),
+        ...(ethereumVmContentfulId && 
+          {
+            vmInfo: {
+              ['en-US']: {
+                sys: {
+                  id: ethereumVmContentfulId, 
+                  linkType: 'Entry',
+                  type: 'Link'
+                }
+              }
             }
           }
-        },
-        subnetInfo: {
+        ),
+        ...(subnetContentfulId && {subnetInfo: {
           ['en-US']: {
             sys: {
               id: subnetContentfulId, 
@@ -865,7 +860,7 @@ networkTokenContentfulId = await client
               type: 'Link'
             }
           }
-        },
+        }}),
         ...(body.avatarAsset &&
           body.avatarAsset.fields.file['en-US'] && {
             logo: {
