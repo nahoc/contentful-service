@@ -518,43 +518,42 @@ app.post('/create-public-explorer', async function (req, res) {
     try {
       const space = await client.getSpace(CHAIN_ASSETS_CONTENTFUL_SPACE_ID);
       const environment = await space.getEnvironment(CONTENTFUL_ENVIRONMENT_ID);
-      
+  
       return environment.createEntry('resourceLink', {
         fields: { type: { 'en-US': type }, url: { 'en-US': url } },
       });
     } catch (err) {
       console.error(err);
-      return res.status(400).send(err);
+      return Promise.reject(err);
     }
   };
-    
-  // split in 3 parts to avoid rate limitting
-  const [mediumResourceLink, redditResourceLink, supportResourceLink, telegramResourceLink, tiktokResourceLink, twitterResourceLink] = await Promise.all([
-    createSocialEntry('Medium', body.Medium),
-    createSocialEntry('Reddit', body.Reddit),
-    createSocialEntry('Support', body.Support),
-    createSocialEntry('Telegram', body.Telegram),
-    createSocialEntry('TikTok', body.TikTok),
-    createSocialEntry('Twitter', body.Twitter),
-  ]);
-
-  const [websiteResourceLink, whitepaperResourceLink, youtubeResourceLink, blogResourceLink, coingeckoResourceLink, coinmarketcapResourceLink, ] = await Promise.all([
-    createSocialEntry('Website', body.Website),
-    createSocialEntry('Whitepaper', body.Whitepaper),
-    createSocialEntry('Youtube', body.Youtube),
-    createSocialEntry('Blog', body.Blog),
-    createSocialEntry('CoinGecko', body.CoinGecko),
-    createSocialEntry('CoinMarketCap', body.CoinMarketCap),
-  ]);
-
-  const [discordResourceLink, documentationResourceLink, facebookResourceLink, githubResourceLink, instagramResourceLink, linkedinResourceLink] = await Promise.all([
-    createSocialEntry('Discord', body.Discord),
-    createSocialEntry('Documentation', body.Documentation),
-    createSocialEntry('Facebook', body.Facebook),
-    createSocialEntry('Github', body.Github),
-    createSocialEntry('Instagram', body.Instagram),
-    createSocialEntry('LinkedIn', body.LinkedIn),
-  ]);
+  
+  const socialEntriesPromises = [
+    'Medium', 'Reddit', 'Support', 'Telegram', 'TikTok', 'Twitter',
+  ].map(type => createSocialEntry(type, body[type]));
+  
+  const websiteEntriesPromises = [
+    'Website', 'Whitepaper', 'Youtube', 'Blog', 'CoinGecko', 'CoinMarketCap',
+  ].map(type => createSocialEntry(type, body[type]));
+  
+  const otherEntriesPromises = [
+    'Discord', 'Documentation', 'Facebook', 'Github', 'Instagram', 'LinkedIn',
+  ].map(type => createSocialEntry(type, body[type]));
+  
+  const [
+    mediumResourceLink, redditResourceLink, supportResourceLink,
+    telegramResourceLink, tiktokResourceLink, twitterResourceLink,
+  ] = await Promise.allSettled(socialEntriesPromises);
+  
+  const [
+    websiteResourceLink, whitepaperResourceLink, youtubeResourceLink,
+    blogResourceLink, coingeckoResourceLink, coinmarketcapResourceLink,
+  ] = await Promise.allSettled(websiteEntriesPromises);
+  
+  const [
+    discordResourceLink, documentationResourceLink, facebookResourceLink,
+    githubResourceLink, instagramResourceLink, linkedinResourceLink,
+  ] = await Promise.allSettled(otherEntriesPromises);
 
 // creating testnet chain
   await client
@@ -608,17 +607,6 @@ app.post('/create-public-explorer', async function (req, res) {
           }
         }),
         /*
-        ...(youtubeResourceLink && { 
-          resourceLink: {
-            ['en-US']: {
-              sys: {
-                id: youtubeResourceLink.sys.id, 
-                linkType: 'Entry',
-                type: 'Link'
-              }
-            }
-          }
-        }),
         ...(whitepaperResourceLink && { 
           resourceLink: {
             ['en-US']: {
