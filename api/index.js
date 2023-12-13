@@ -623,7 +623,7 @@ networkTokenContentfulId = await client
           'en-US': false,//TODO: change this whenever we're ready
         },
         primaryColor: {
-          'en-US': body.primaryColor
+          'en-US': body.color
         },
         ...(body.Website && {
           officialSite: {
