@@ -516,12 +516,17 @@ app.post('/create-public-explorer', async function (req, res) {
     if (!url) return undefined;
   
     try {
-      const space = await client.getSpace(CHAIN_ASSETS_CONTENTFUL_SPACE_ID);
-      const environment = await space.getEnvironment(CONTENTFUL_ENVIRONMENT_ID);
-  
-      return environment.createEntry('resourceLink', {
-        fields: { type: { 'en-US': type }, url: { 'en-US': url } },
-      });
+      return client
+      .getSpace(CHAIN_ASSETS_CONTENTFUL_SPACE_ID)
+      .then((space) => space.getEnvironment(CONTENTFUL_ENVIRONMENT_ID))
+      .then((environment) =>
+        environment.createEntry('resourceLink', {
+          fields: {
+            type: { 'en-US': type },
+            url: { 'en-US': url },
+          },
+        })
+      )
     } catch (err) {
       console.error(err);
       return Promise.reject(err);
@@ -554,6 +559,28 @@ app.post('/create-public-explorer', async function (req, res) {
     discordResourceLink, documentationResourceLink, facebookResourceLink,
     githubResourceLink, instagramResourceLink, linkedinResourceLink,
   ] = await Promise.allSettled(otherEntriesPromises);
+
+  const resourceLinks2 = [
+    youtubeResourceLink, whitepaperResourceLink, websiteResourceLink,
+    twitterResourceLink, tiktokResourceLink, telegramResourceLink,
+    supportResourceLink, redditResourceLink, mediumResourceLink,
+    linkedinResourceLink, instagramResourceLink, githubResourceLink,
+    facebookResourceLink, documentationResourceLink, discordResourceLink,
+    coinmarketcapResourceLink, coingeckoResourceLink, blogResourceLink,
+  ];
+  
+  // Filter out undefined values and map to the desired format
+  const mergedResourceLinks2 = resourceLinks2
+    .filter(link => link?.value?.sys?.id)
+    .map(link => ({
+      ['en-US']: {
+        sys: {
+          id: link.value.sys.id,
+          linkType: 'Entry',
+          type: 'Link',
+        },
+      },
+    }));
 
 // creating testnet chain
   await client
@@ -595,204 +622,7 @@ app.post('/create-public-explorer', async function (req, res) {
             'en-US': body.Website
           }
         }),
-        ...(youtubeResourceLink?.value?.sys?.id && { 
-          resourceLink: {
-            ['en-US']: {
-              sys: {
-                id: youtubeResourceLink.value.sys.id, 
-                linkType: 'Entry',
-                type: 'Link'
-              }
-            }
-          }
-        }),
-        ...(whitepaperResourceLink?.value?.sys?.id && { 
-          resourceLink: {
-            ['en-US']: {
-              sys: {
-                id: whitepaperResourceLink.value.sys.id,
-                linkType: 'Entry',
-                type: 'Link'
-              }
-            }
-          }
-        }),
-        ...(websiteResourceLink?.value?.sys?.id && { 
-          resourceLink: {
-            ['en-US']: {
-              sys: {
-                id: websiteResourceLink.value.sys.id,
-                linkType: 'Entry',
-                type: 'Link'
-              }
-            }
-          }
-        }),
-        ...(twitterResourceLink?.value?.sys?.id && { 
-          resourceLink: {
-            ['en-US']: {
-              sys: {
-                id: twitterResourceLink.value.sys.id,
-                linkType: 'Entry',
-                type: 'Link'
-              }
-            }
-          }
-        }),
-        ...(tiktokResourceLink?.value?.sys?.id && { 
-          resourceLink: {
-            ['en-US']: {
-              sys: {
-                id: tiktokResourceLink.value.sys.id,
-                linkType: 'Entry',
-                type: 'Link'
-              }
-            }
-          }
-        }),
-        ...(telegramResourceLink?.value?.sys?.id && { 
-          resourceLink: {
-            ['en-US']: {
-              sys: {
-                id: telegramResourceLink.value.sys.id,
-                linkType: 'Entry',
-                type: 'Link'
-              }
-            }
-          }
-        }),
-        ...(supportResourceLink?.value?.sys?.id && { 
-          resourceLink: {
-            ['en-US']: {
-              sys: {
-                id: supportResourceLink.value.sys.id, 
-                linkType: 'Entry',
-                type: 'Link'
-              }
-            }
-          }
-        }),
-        ...(redditResourceLink?.value?.sys?.id && { 
-          resourceLink: {
-            ['en-US']: {
-              sys: {
-                id: redditResourceLink.value.sys.id, 
-                linkType: 'Entry',
-                type: 'Link'
-              }
-            }
-          }
-        }),
-        ...(mediumResourceLink?.value?.sys?.id && { 
-          resourceLink: {
-            ['en-US']: {
-              sys: {
-                id: mediumResourceLink.value.sys.id, 
-                linkType: 'Entry',
-                type: 'Link'
-              }
-            }
-          }
-        }),
-        ...(linkedinResourceLink?.value?.sys?.id && { 
-          resourceLink: {
-            ['en-US']: {
-              sys: {
-                id: linkedinResourceLink.value.sys.id, 
-                linkType: 'Entry',
-                type: 'Link'
-              }
-            }
-          }
-        }),
-        ...(instagramResourceLink?.value?.sys?.id && { 
-          resourceLink: {
-            ['en-US']: {
-              sys: {
-                id: instagramResourceLink.value.sys.id, 
-                linkType: 'Entry',
-                type: 'Link'
-              }
-            }
-          }
-        }),
-        ...(githubResourceLink?.value?.sys?.id && { 
-          resourceLink: {
-            ['en-US']: {
-              sys: {
-                id: githubResourceLink.value.sys.id, 
-                linkType: 'Entry',
-                type: 'Link'
-              }
-            }
-          }
-        }),
-        ...(facebookResourceLink?.value?.sys?.id && { 
-          resourceLink: {
-            ['en-US']: {
-              sys: {
-                id: facebookResourceLink.value.sys.id, 
-                linkType: 'Entry',
-                type: 'Link'
-              }
-            }
-          }
-        }),
-        ...(documentationResourceLink?.value?.sys?.id && { 
-          resourceLink: {
-            ['en-US']: {
-              sys: {
-                id: documentationResourceLink.value.sys.id, 
-                linkType: 'Entry',
-                type: 'Link'
-              }
-            }
-          }
-        }),
-        ...(discordResourceLink?.value?.sys?.id && { 
-          resourceLink: {
-            ['en-US']: {
-              sys: {
-                id: discordResourceLink.value.sys.id, 
-                linkType: 'Entry',
-                type: 'Link'
-              }
-            }
-          }
-        }),
-        ...(coinmarketcapResourceLink?.value?.sys?.id && { 
-          resourceLink: {
-            ['en-US']: {
-              sys: {
-                id: coinmarketcapResourceLink.value.sys.id, 
-                linkType: 'Entry',
-                type: 'Link'
-              }
-            }
-          }
-        }),
-        ...(coingeckoResourceLink?.value?.sys?.id && { 
-          resourceLink: {
-            ['en-US']: {
-              sys: {
-                id: coingeckoResourceLink.value.sys.id, 
-                linkType: 'Entry',
-                type: 'Link'
-              }
-            }
-          }
-        }),
-        ...(blogResourceLink?.value?.sys?.id && { 
-          resourceLink: {
-            ['en-US']: {
-              sys: {
-                id: blogResourceLink.value.sys.id, 
-                linkType: 'Entry',
-                type: 'Link'
-              }
-            }
-          }
-        }),
+        resourceLinks2: mergedResourceLinks2,
         ...(networkTokenContentfulId && { 
           networkToken: {
             ['en-US']: {
@@ -817,7 +647,8 @@ app.post('/create-public-explorer', async function (req, res) {
             }
           }
         ),
-        ...(subnetContentfulId && {subnetInfo: {
+        ...(subnetContentfulId && {
+          subnetInfo: {
           ['en-US']: {
             sys: {
               id: subnetContentfulId, 
