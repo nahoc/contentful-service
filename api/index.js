@@ -433,10 +433,7 @@ app.post('/create-project', async function (req, res) {
 
 // create public explorer entry endpoint
 app.post('/create-public-explorer', async function (req, res) {
-  console.log('HERE111')
-  console.log('req.body', req.body)
   const body = JSON.parse(req.body)
-  console.log('body', req.body)
   const signature = body.signature
 
   if (!signature || !body.account) {
@@ -549,6 +546,42 @@ networkTokenContentfulId = await client
       return res.status(400).send(err)
     }))
 
+  const createSocialEntry = async (type, url) => {
+    if (!url) return undefined;
+  
+    try {
+      const space = await client.getSpace(CHAIN_ASSETS_CONTENTFUL_SPACE_ID);
+      const environment = await space.getEnvironment(CONTENTFUL_ENVIRONMENT_ID);
+      
+      return environment.createEntry('resourceLink', {
+        fields: { type: { 'en-US': type }, url: { 'en-US': url } },
+      });
+    } catch (err) {
+      console.error(err);
+      return res.status(400).send(err);
+    }
+  };
+    
+  const [blogResourceLink, coingeckoResourceLink, coinmarketcapResourceLink, discordResourceLink, documentationResourceLink, facebookResourceLink, githubResourceLink, instagramResourceLink, linkedinResourceLink, mediumResourceLink, redditResourceLink, supportResourceLink, telegramResourceLink, tiktokResourceLink, twitterResourceLink, websiteResourceLink, whitepaperResourceLink, youtubeResourceLink] = await Promise.all([
+    createSocialEntry('Blog', body.blog),
+    createSocialEntry('CoinGecko', body.coingecko),
+    createSocialEntry('CoinMarketCap', body.coinmarketcap),
+    createSocialEntry('Discord', body.discord),
+    createSocialEntry('Documentation', body.documentation),
+    createSocialEntry('Facebook', body.facebook),
+    createSocialEntry('Github', body.github),
+    createSocialEntry('Instagram', body.instagram),
+    createSocialEntry('LinkedIn', body.linkedin),
+    createSocialEntry('Medium', body.medium),
+    createSocialEntry('Reddit', body.reddit),
+    createSocialEntry('Support', body.support),
+    createSocialEntry('Telegram', body.telegram),
+    createSocialEntry('TikTok', body.tiktok),
+    createSocialEntry('Twitter', body.twitter),
+    createSocialEntry('Website', body.website),
+    createSocialEntry('Whitepaper', body.whitepaper),
+    createSocialEntry('Youtube', body.youtube),
+  ]);
 
 // creating testnet chain
   await client
@@ -585,9 +618,220 @@ networkTokenContentfulId = await client
         primaryColor: {
           'en-US': body.primaryColor
         },
-        officialSite: {
-          'en-US': body.officialSite
-        },
+        ...(body.website && {
+          officialSite: {
+            'en-US': body.website
+          }
+        }),
+        ...(youtubeResourceLink && { 
+          resourceLink: {
+            ['en-US']: {
+              sys: {
+                id: youtubeResourceLink.sys.id, 
+                linkType: 'Entry',
+                type: 'Link'
+              }
+            }
+          }
+        }),
+        ...(whitepaperResourceLink && { 
+          resourceLink: {
+            ['en-US']: {
+              sys: {
+                id: whitepaperResourceLink.sys.id, 
+                linkType: 'Entry',
+                type: 'Link'
+              }
+            }
+          }
+        }),
+        ...(websiteResourceLink && { 
+          resourceLink: {
+            ['en-US']: {
+              sys: {
+                id: websiteResourceLink.sys.id, 
+                linkType: 'Entry',
+                type: 'Link'
+              }
+            }
+          }
+        }),
+        ...(twitterResourceLink && { 
+          resourceLink: {
+            ['en-US']: {
+              sys: {
+                id: twitterResourceLink.sys.id, 
+                linkType: 'Entry',
+                type: 'Link'
+              }
+            }
+          }
+        }),
+        ...(tiktokResourceLink && { 
+          resourceLink: {
+            ['en-US']: {
+              sys: {
+                id: tiktokResourceLink.sys.id, 
+                linkType: 'Entry',
+                type: 'Link'
+              }
+            }
+          }
+        }),
+        ...(telegramResourceLink && { 
+          resourceLink: {
+            ['en-US']: {
+              sys: {
+                id: telegramResourceLink.sys.id, 
+                linkType: 'Entry',
+                type: 'Link'
+              }
+            }
+          }
+        }),
+        ...(supportResourceLink && { 
+          resourceLink: {
+            ['en-US']: {
+              sys: {
+                id: supportResourceLink.sys.id, 
+                linkType: 'Entry',
+                type: 'Link'
+              }
+            }
+          }
+        }),
+        ...(redditResourceLink && { 
+          resourceLink: {
+            ['en-US']: {
+              sys: {
+                id: redditResourceLink.sys.id, 
+                linkType: 'Entry',
+                type: 'Link'
+              }
+            }
+          }
+        }),
+        ...(mediumResourceLink && { 
+          resourceLink: {
+            ['en-US']: {
+              sys: {
+                id: mediumResourceLink.sys.id, 
+                linkType: 'Entry',
+                type: 'Link'
+              }
+            }
+          }
+        }),
+        ...(linkedinResourceLink && { 
+          resourceLink: {
+            ['en-US']: {
+              sys: {
+                id: linkedinResourceLink.sys.id, 
+                linkType: 'Entry',
+                type: 'Link'
+              }
+            }
+          }
+        }),
+        ...(instagramResourceLink && { 
+          resourceLink: {
+            ['en-US']: {
+              sys: {
+                id: instagramResourceLink.sys.id, 
+                linkType: 'Entry',
+                type: 'Link'
+              }
+            }
+          }
+        }),
+        ...(githubResourceLink && { 
+          resourceLink: {
+            ['en-US']: {
+              sys: {
+                id: githubResourceLink.sys.id, 
+                linkType: 'Entry',
+                type: 'Link'
+              }
+            }
+          }
+        }),
+        ...(facebookResourceLink && { 
+          resourceLink: {
+            ['en-US']: {
+              sys: {
+                id: facebookResourceLink.sys.id, 
+                linkType: 'Entry',
+                type: 'Link'
+              }
+            }
+          }
+        }),
+        ...(documentationResourceLink && { 
+          resourceLink: {
+            ['en-US']: {
+              sys: {
+                id: documentationResourceLink.sys.id, 
+                linkType: 'Entry',
+                type: 'Link'
+              }
+            }
+          }
+        }),
+        ...(discordResourceLink && { 
+          resourceLink: {
+            ['en-US']: {
+              sys: {
+                id: discordResourceLink.sys.id, 
+                linkType: 'Entry',
+                type: 'Link'
+              }
+            }
+          }
+        }),
+        ...(coinmarketcapResourceLink && { 
+          resourceLink: {
+            ['en-US']: {
+              sys: {
+                id: coinmarketcapResourceLink.sys.id, 
+                linkType: 'Entry',
+                type: 'Link'
+              }
+            }
+          }
+        }),
+        ...(coingeckoResourceLink && { 
+          resourceLink: {
+            ['en-US']: {
+              sys: {
+                id: coingeckoResourceLink.sys.id, 
+                linkType: 'Entry',
+                type: 'Link'
+              }
+            }
+          }
+        }),
+        ...(coingeckoResourceLink && { 
+          resourceLink: {
+            ['en-US']: {
+              sys: {
+                id: coingeckoResourceLink.sys.id, 
+                linkType: 'Entry',
+                type: 'Link'
+              }
+            }
+          }
+        }),
+        ...(blogResourceLink && { 
+          resourceLink: {
+            ['en-US']: {
+              sys: {
+                id: blogResourceLink.sys.id, 
+                linkType: 'Entry',
+                type: 'Link'
+              }
+            }
+          }
+        }),
         networkToken: {
           ['en-US']: {
             sys: {
