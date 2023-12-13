@@ -591,7 +591,7 @@ app.post('/create-public-explorer', async function (req, res) {
         primaryColor: {
           'en-US': body.color
         },
-        ...(body.Website && {
+        /*...(body.Website && {
           officialSite: {
             'en-US': body.Website
           }
@@ -793,7 +793,7 @@ app.post('/create-public-explorer', async function (req, res) {
               }
             }
           }
-        }),
+        }),*/
         ...(networkTokenContentfulId && { 
           networkToken: {
             ['en-US']: {
@@ -844,7 +844,7 @@ app.post('/create-public-explorer', async function (req, res) {
     .then(() => res.sendStatus(200))
     .catch((err) => {
       console.error(err)
-      return res.status(400).send(err)
+      return res.status(402).send(err)
     }))
 
   res.end()
