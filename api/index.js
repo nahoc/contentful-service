@@ -562,23 +562,26 @@ networkTokenContentfulId = await client
     }
   };
     
-  // split in 2 parts to avoid rate limitting
-  const [mediumResourceLink, redditResourceLink, supportResourceLink, telegramResourceLink, tiktokResourceLink, twitterResourceLink, websiteResourceLink, whitepaperResourceLink, youtubeResourceLink] = await Promise.all([
+  // split in 3 parts to avoid rate limitting
+  const [mediumResourceLink, redditResourceLink, supportResourceLink, telegramResourceLink, tiktokResourceLink, twitterResourceLink] = await Promise.all([
     createSocialEntry('Medium', body.Medium),
     createSocialEntry('Reddit', body.Reddit),
     createSocialEntry('Support', body.Support),
     createSocialEntry('Telegram', body.Telegram),
     createSocialEntry('TikTok', body.TikTok),
     createSocialEntry('Twitter', body.Twitter),
+  ]);
+
+  const [websiteResourceLink, whitepaperResourceLink, youtubeResourceLink, blogResourceLink, coingeckoResourceLink, coinmarketcapResourceLink, ] = await Promise.all([
     createSocialEntry('Website', body.Website),
     createSocialEntry('Whitepaper', body.Whitepaper),
     createSocialEntry('Youtube', body.Youtube),
-  ]);
-
-  const [blogResourceLink, coingeckoResourceLink, coinmarketcapResourceLink, discordResourceLink, documentationResourceLink, facebookResourceLink, githubResourceLink, instagramResourceLink, linkedinResourceLink] = await Promise.all([
     createSocialEntry('Blog', body.Blog),
     createSocialEntry('CoinGecko', body.CoinGecko),
     createSocialEntry('CoinMarketCap', body.CoinMarketCap),
+  ]);
+
+  const [discordResourceLink, documentationResourceLink, facebookResourceLink, githubResourceLink, instagramResourceLink, linkedinResourceLink] = await Promise.all([
     createSocialEntry('Discord', body.Discord),
     createSocialEntry('Documentation', body.Documentation),
     createSocialEntry('Facebook', body.Facebook),
