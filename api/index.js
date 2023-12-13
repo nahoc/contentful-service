@@ -527,7 +527,7 @@ app.post('/create-public-explorer', async function (req, res) {
       return Promise.reject(err);
     }
   };
-  
+
   const socialEntriesPromises = [
     'Medium', 'Reddit', 'Support', 'Telegram', 'TikTok', 'Twitter',
   ].map(type => createSocialEntry(type, body[type]));
@@ -554,6 +554,12 @@ app.post('/create-public-explorer', async function (req, res) {
     discordResourceLink, documentationResourceLink, facebookResourceLink,
     githubResourceLink, instagramResourceLink, linkedinResourceLink,
   ] = await Promise.allSettled(otherEntriesPromises);
+
+  console.log('---')
+  console.log('youtubeResourceLink', youtubeResourceLink)
+  console.log('whitepaperResourceLink', whitepaperResourceLink)
+  console.log('websiteResourceLink', websiteResourceLink)
+  console.log('blogResourceLink', blogResourceLink)
 
 // creating testnet chain
   await client
@@ -595,205 +601,204 @@ app.post('/create-public-explorer', async function (req, res) {
             'en-US': body.Website
           }
         }),
-        ...(youtubeResourceLink && { 
+        ...(youtubeResourceLink?.value?.sys?.id && { 
           resourceLink: {
             ['en-US']: {
               sys: {
-                id: youtubeResourceLink.sys.id, 
+                id: youtubeResourceLink.value.sys.id, 
                 linkType: 'Entry',
                 type: 'Link'
               }
             }
           }
         }),
-        /*
-        ...(whitepaperResourceLink && { 
+        ...(whitepaperResourceLink?.value?.sys?.id && { 
           resourceLink: {
             ['en-US']: {
               sys: {
-                id: whitepaperResourceLink.sys.id, 
+                id: whitepaperResourceLink.value.sys.id,
                 linkType: 'Entry',
                 type: 'Link'
               }
             }
           }
         }),
-        ...(websiteResourceLink && { 
+        ...(websiteResourceLink?.value?.sys?.id && { 
           resourceLink: {
             ['en-US']: {
               sys: {
-                id: websiteResourceLink.sys.id, 
+                id: websiteResourceLink.value.sys.id,
                 linkType: 'Entry',
                 type: 'Link'
               }
             }
           }
         }),
-        ...(twitterResourceLink && { 
+        ...(twitterResourceLink?.value?.sys?.id && { 
           resourceLink: {
             ['en-US']: {
               sys: {
-                id: twitterResourceLink.sys.id, 
+                id: twitterResourceLink.value.sys.id,
                 linkType: 'Entry',
                 type: 'Link'
               }
             }
           }
         }),
-        ...(tiktokResourceLink && { 
+        ...(tiktokResourceLink?.value?.sys?.id && { 
           resourceLink: {
             ['en-US']: {
               sys: {
-                id: tiktokResourceLink.sys.id, 
+                id: tiktokResourceLink.value.sys.id,
                 linkType: 'Entry',
                 type: 'Link'
               }
             }
           }
         }),
-        ...(telegramResourceLink && { 
+        ...(telegramResourceLink?.value?.sys?.id && { 
           resourceLink: {
             ['en-US']: {
               sys: {
-                id: telegramResourceLink.sys.id, 
+                id: telegramResourceLink.value.sys.id,
                 linkType: 'Entry',
                 type: 'Link'
               }
             }
           }
         }),
-        ...(supportResourceLink && { 
+        ...(supportResourceLink?.value?.sys?.id && { 
           resourceLink: {
             ['en-US']: {
               sys: {
-                id: supportResourceLink.sys.id, 
+                id: supportResourceLink.value.sys.id, 
                 linkType: 'Entry',
                 type: 'Link'
               }
             }
           }
         }),
-        ...(redditResourceLink && { 
+        ...(redditResourceLink?.value?.sys?.id && { 
           resourceLink: {
             ['en-US']: {
               sys: {
-                id: redditResourceLink.sys.id, 
+                id: redditResourceLink.value.sys.id, 
                 linkType: 'Entry',
                 type: 'Link'
               }
             }
           }
         }),
-        ...(mediumResourceLink && { 
+        ...(mediumResourceLink?.value?.sys?.id && { 
           resourceLink: {
             ['en-US']: {
               sys: {
-                id: mediumResourceLink.sys.id, 
+                id: mediumResourceLink.value.sys.id, 
                 linkType: 'Entry',
                 type: 'Link'
               }
             }
           }
         }),
-        ...(linkedinResourceLink && { 
+        ...(linkedinResourceLink?.value?.sys?.id && { 
           resourceLink: {
             ['en-US']: {
               sys: {
-                id: linkedinResourceLink.sys.id, 
+                id: linkedinResourceLink.value.sys.id, 
                 linkType: 'Entry',
                 type: 'Link'
               }
             }
           }
         }),
-        ...(instagramResourceLink && { 
+        ...(instagramResourceLink?.value?.sys?.id && { 
           resourceLink: {
             ['en-US']: {
               sys: {
-                id: instagramResourceLink.sys.id, 
+                id: instagramResourceLink.value.sys.id, 
                 linkType: 'Entry',
                 type: 'Link'
               }
             }
           }
         }),
-        ...(githubResourceLink && { 
+        ...(githubResourceLink?.value?.sys?.id && { 
           resourceLink: {
             ['en-US']: {
               sys: {
-                id: githubResourceLink.sys.id, 
+                id: githubResourceLink.value.sys.id, 
                 linkType: 'Entry',
                 type: 'Link'
               }
             }
           }
         }),
-        ...(facebookResourceLink && { 
+        ...(facebookResourceLink?.value?.sys?.id && { 
           resourceLink: {
             ['en-US']: {
               sys: {
-                id: facebookResourceLink.sys.id, 
+                id: facebookResourceLink.value.sys.id, 
                 linkType: 'Entry',
                 type: 'Link'
               }
             }
           }
         }),
-        ...(documentationResourceLink && { 
+        ...(documentationResourceLink?.value?.sys?.id && { 
           resourceLink: {
             ['en-US']: {
               sys: {
-                id: documentationResourceLink.sys.id, 
+                id: documentationResourceLink.value.sys.id, 
                 linkType: 'Entry',
                 type: 'Link'
               }
             }
           }
         }),
-        ...(discordResourceLink && { 
+        ...(discordResourceLink?.value?.sys?.id && { 
           resourceLink: {
             ['en-US']: {
               sys: {
-                id: discordResourceLink.sys.id, 
+                id: discordResourceLink.value.sys.id, 
                 linkType: 'Entry',
                 type: 'Link'
               }
             }
           }
         }),
-        ...(coinmarketcapResourceLink && { 
+        ...(coinmarketcapResourceLink?.value?.sys?.id && { 
           resourceLink: {
             ['en-US']: {
               sys: {
-                id: coinmarketcapResourceLink.sys.id, 
+                id: coinmarketcapResourceLink.value.sys.id, 
                 linkType: 'Entry',
                 type: 'Link'
               }
             }
           }
         }),
-        ...(coingeckoResourceLink && { 
+        ...(coingeckoResourceLink?.value?.sys?.id && { 
           resourceLink: {
             ['en-US']: {
               sys: {
-                id: coingeckoResourceLink.sys.id, 
+                id: coingeckoResourceLink.value.sys.id, 
                 linkType: 'Entry',
                 type: 'Link'
               }
             }
           }
         }),
-        ...(blogResourceLink && { 
+        ...(blogResourceLink?.value?.sys?.id && { 
           resourceLink: {
             ['en-US']: {
               sys: {
-                id: blogResourceLink.sys.id, 
+                id: blogResourceLink.value.sys.id, 
                 linkType: 'Entry',
                 type: 'Link'
               }
             }
           }
-        }),*/
+        }),
         ...(networkTokenContentfulId && { 
           networkToken: {
             ['en-US']: {
