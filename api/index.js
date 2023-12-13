@@ -562,16 +562,8 @@ networkTokenContentfulId = await client
     }
   };
     
-  const [blogResourceLink, coingeckoResourceLink, coinmarketcapResourceLink, discordResourceLink, documentationResourceLink, facebookResourceLink, githubResourceLink, instagramResourceLink, linkedinResourceLink, mediumResourceLink, redditResourceLink, supportResourceLink, telegramResourceLink, tiktokResourceLink, twitterResourceLink, websiteResourceLink, whitepaperResourceLink, youtubeResourceLink] = await Promise.all([
-    createSocialEntry('Blog', body.Blog),
-    createSocialEntry('CoinGecko', body.CoinGecko),
-    createSocialEntry('CoinMarketCap', body.CoinMarketCap),
-    createSocialEntry('Discord', body.Discord),
-    createSocialEntry('Documentation', body.Documentation),
-    createSocialEntry('Facebook', body.Facebook),
-    createSocialEntry('Github', body.Github),
-    createSocialEntry('Instagram', body.Instagram),
-    createSocialEntry('LinkedIn', body.LinkedIn),
+  // split in 2 parts to avoid rate limitting
+  const [mediumResourceLink, redditResourceLink, supportResourceLink, telegramResourceLink, tiktokResourceLink, twitterResourceLink, websiteResourceLink, whitepaperResourceLink, youtubeResourceLink] = await Promise.all([
     createSocialEntry('Medium', body.Medium),
     createSocialEntry('Reddit', body.Reddit),
     createSocialEntry('Support', body.Support),
@@ -581,6 +573,18 @@ networkTokenContentfulId = await client
     createSocialEntry('Website', body.Website),
     createSocialEntry('Whitepaper', body.Whitepaper),
     createSocialEntry('Youtube', body.Youtube),
+  ]);
+
+  const [blogResourceLink, coingeckoResourceLink, coinmarketcapResourceLink, discordResourceLink, documentationResourceLink, facebookResourceLink, githubResourceLink, instagramResourceLink, linkedinResourceLink] = await Promise.all([
+    createSocialEntry('Blog', body.Blog),
+    createSocialEntry('CoinGecko', body.CoinGecko),
+    createSocialEntry('CoinMarketCap', body.CoinMarketCap),
+    createSocialEntry('Discord', body.Discord),
+    createSocialEntry('Documentation', body.Documentation),
+    createSocialEntry('Facebook', body.Facebook),
+    createSocialEntry('Github', body.Github),
+    createSocialEntry('Instagram', body.Instagram),
+    createSocialEntry('LinkedIn', body.LinkedIn),
   ]);
 
 // creating testnet chain
