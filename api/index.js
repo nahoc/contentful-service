@@ -555,12 +555,6 @@ app.post('/create-public-explorer', async function (req, res) {
     githubResourceLink, instagramResourceLink, linkedinResourceLink,
   ] = await Promise.allSettled(otherEntriesPromises);
 
-  console.log('---')
-  console.log('youtubeResourceLink', youtubeResourceLink)
-  console.log('whitepaperResourceLink', whitepaperResourceLink)
-  console.log('websiteResourceLink', websiteResourceLink)
-  console.log('blogResourceLink', blogResourceLink)
-
 // creating testnet chain
   await client
   .getSpace(CHAIN_ASSETS_CONTENTFUL_SPACE_ID)
@@ -849,7 +843,7 @@ app.post('/create-public-explorer', async function (req, res) {
     .then(() => res.sendStatus(200))
     .catch((err) => {
       console.error(err)
-      return res.status(402).send(err)
+      return res.status(400).send(err)
     }))
 
   res.end()
