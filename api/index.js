@@ -440,112 +440,78 @@ app.post('/create-public-explorer', async function (req, res) {
     throw 'No signature';
   }
 
-  let networkTokenContentfulId = ''
-  let subnetContentfulId = ''
-  let ethereumVmContentfulId = ''
-
-// creating eth vm
-/*ethereumVmContentfulId = await client
-  .getSpace(CHAIN_ASSETS_CONTENTFUL_SPACE_ID)
-  .then((space) => space.getEnvironment(CONTENTFUL_ENVIRONMENT_ID))
-  .then((environment) => 
-    environment.createEntry('ethereumVm', {
-      fields: {
-        evmChainId: {
-          'en-US': body.evmChainId
-        },
-        rpcUrl: {
-          'en-US': body.rpcUrl
-        },
-        multicall3Address: {
-          'en-US': body.multicall3Address
-        },
-        wsUrl: {
-          'en-US': body.wsUrl
-        },
-      }
-    }))
-    .then((contentfulResult) => {
-      return contentfulResult.sys.id
-    })
-    .catch((err) => {
-      console.error(err)
-      return res.status(400).send(err)
-    })
-
-// creating subnet
-subnetContentfulId = await client
-  .getSpace(CHAIN_ASSETS_CONTENTFUL_SPACE_ID)
-  .then((space) => space.getEnvironment(CONTENTFUL_ENVIRONMENT_ID))
-  .then((environment) => 
-    environment.createEntry('subnet', {
-      fields: {
-        name: {
-          'en-US': body.subnetName
-        },
-        subnetId: {
-          'en-US': body.subnetId
-        },
-        platformChainId: {
-          'en-US': body.platformChainId
-        },
-        vmId: {
-          'en-US': body.vmId
-        },
-      }
-    })
-    .then((contentfulResult) => {
-      return contentfulResult.sys.id
-    })
-    .catch((err) => {
-      console.error(err)
-      return res.status(400).send(err)
-    }))
-
-// creating network token
-networkTokenContentfulId = await client
-  .getSpace(CHAIN_ASSETS_CONTENTFUL_SPACE_ID)
-  .then((space) => space.getEnvironment(CONTENTFUL_ENVIRONMENT_ID))
-  .then((environment) => 
-    environment.createEntry('networkToken', {
-      fields: {
-        name: {
-          'en-US': body.tokenName
-        },
-        symbol: {
-          'en-US': body.symbol
-        },
-        decimals: {
-          'en-US': 18
-        },
-        description: {
-          'en-US': body.description
-        },
-        coingeckoCoinId: {
-          'en-US': ''
-        },
-        ...(body.avatarAsset &&
-          body.avatarAsset.fields.file['en-US'] && {
-            logo: {
-              'en-US': {
-                sys: {
-                  id: body.avatarAsset.sys.id,
-                  linkType: 'Asset',
-                  type: 'Link'
-                }
-              },
-            },
-          }),
-      }
-    })
-    .then((contentfulResult) => {
-      return contentfulResult.sys.id
-    })
-    .catch((err) => {
-      console.error(err)
-      return res.status(400).send(err)
-    }))
-
+  const [ethereumVmContentfulId, subnetContentfulId, networkTokenContentfulId] = await Promise.all([
+    client
+      .getSpace(CHAIN_ASSETS_CONTENTFUL_SPACE_ID)
+      .then((space) => space.getEnvironment(CONTENTFUL_ENVIRONMENT_ID))
+      .then((environment) =>
+        environment.createEntry('ethereumVm', {
+          fields: {
+            evmChainId: { 'en-US': body.evmChainId },
+            rpcUrl: { 'en-US': body.rpcUrl },
+            multicall3Address: { 'en-US': body.multicall3Address },
+            wsUrl: { 'en-US': body.wsUrl },
+          },
+        })
+      )
+      .then((contentfulResult) => contentfulResult.sys.id)
+      .catch((err) => {
+        console.error(err);
+        return res.status(400).send(err);
+      }),
+  
+    client
+      .getSpace(CHAIN_ASSETS_CONTENTFUL_SPACE_ID)
+      .then((space) => space.getEnvironment(CONTENTFUL_ENVIRONMENT_ID))
+      .then((environment) =>
+        environment.createEntry('subnet', {
+          fields: {
+            name: { 'en-US': body.subnetName },
+            subnetId: { 'en-US': body.subnetId },
+            platformChainId: { 'en-US': body.platformChainId },
+            vmId: { 'en-US': body.vmId },
+          },
+        })
+      )
+      .then((contentfulResult) => contentfulResult.sys.id)
+      .catch((err) => {
+        console.error(err);
+        return res.status(400).send(err);
+      }),
+  
+    client
+      .getSpace(CHAIN_ASSETS_CONTENTFUL_SPACE_ID)
+      .then((space) => space.getEnvironment(CONTENTFUL_ENVIRONMENT_ID))
+      .then((environment) =>
+        environment.createEntry('networkToken', {
+          fields: {
+            name: { 'en-US': body.tokenName },
+            symbol: { 'en-US': body.symbol },
+            decimals: { 'en-US': 18 },
+            description: { 'en-US': body.description },
+            coingeckoCoinId: { 'en-US': '' },
+            ...(body.avatarAsset &&
+              body.avatarAsset.fields.file['en-US'] && {
+                logo: {
+                  'en-US': {
+                    sys: {
+                      id: body.avatarAsset.sys.id,
+                      linkType: 'Asset',
+                      type: 'Link',
+                    },
+                  },
+                },
+              }),
+          },
+        })
+      )
+      .then((contentfulResult) => contentfulResult.sys.id)
+      .catch((err) => {
+        console.error(err);
+        return res.status(400).send(err);
+      }),
+  ]);
+  
   const createSocialEntry = async (type, url) => {
     if (!url) return undefined;
   
@@ -588,7 +554,7 @@ networkTokenContentfulId = await client
     createSocialEntry('Github', body.Github),
     createSocialEntry('Instagram', body.Instagram),
     createSocialEntry('LinkedIn', body.LinkedIn),
-  ]);*/
+  ]);
 
 // creating testnet chain
   await client
