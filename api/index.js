@@ -591,7 +591,7 @@ app.post('/create-public-explorer', async function (req, res) {
         primaryColor: {
           'en-US': body.color
         },
-        /*...(body.Website && {
+        ...(body.Website && {
           officialSite: {
             'en-US': body.Website
           }
@@ -606,7 +606,9 @@ app.post('/create-public-explorer', async function (req, res) {
               }
             }
           }
-        }),
+        })
+        /*
+,
         ...(whitepaperResourceLink && { 
           resourceLink: {
             ['en-US']: {
