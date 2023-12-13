@@ -573,14 +573,14 @@ app.post('/create-public-explorer', async function (req, res) {
   const mergedResourceLinks2 = resourceLinks2
     .filter(link => link?.value?.sys?.id)
     .map(link => ({
-      ['en-US']: {
-        sys: {
-          id: link.value.sys.id,
-          linkType: 'Entry',
-          type: 'Link',
-        },
+      sys: {
+        id: link.value.sys.id,
+        linkType: 'Entry',
+        type: 'Link',
       },
     }));
+
+    console.log('mergedResourceLinks2', JSON.stringify(mergedResourceLinks2))
 
 // creating testnet chain
   await client
@@ -622,7 +622,9 @@ app.post('/create-public-explorer', async function (req, res) {
             'en-US': body.Website
           }
         }),
-        resourceLinks2: mergedResourceLinks2,
+        resourceLinks2: {
+          "en-US": mergedResourceLinks2 || []
+        },
         ...(networkTokenContentfulId && { 
           networkToken: {
             ['en-US']: {
