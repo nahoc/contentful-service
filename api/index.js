@@ -606,9 +606,19 @@ app.post('/create-public-explorer', async function (req, res) {
               }
             }
           }
-        })
+        }),
         /*
-,
+        ...(youtubeResourceLink && { 
+          resourceLink: {
+            ['en-US']: {
+              sys: {
+                id: youtubeResourceLink.sys.id, 
+                linkType: 'Entry',
+                type: 'Link'
+              }
+            }
+          }
+        }),
         ...(whitepaperResourceLink && { 
           resourceLink: {
             ['en-US']: {
