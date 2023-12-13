@@ -563,24 +563,24 @@ networkTokenContentfulId = await client
   };
     
   const [blogResourceLink, coingeckoResourceLink, coinmarketcapResourceLink, discordResourceLink, documentationResourceLink, facebookResourceLink, githubResourceLink, instagramResourceLink, linkedinResourceLink, mediumResourceLink, redditResourceLink, supportResourceLink, telegramResourceLink, tiktokResourceLink, twitterResourceLink, websiteResourceLink, whitepaperResourceLink, youtubeResourceLink] = await Promise.all([
-    createSocialEntry('Blog', body.blog),
-    createSocialEntry('CoinGecko', body.coingecko),
-    createSocialEntry('CoinMarketCap', body.coinmarketcap),
-    createSocialEntry('Discord', body.discord),
-    createSocialEntry('Documentation', body.documentation),
-    createSocialEntry('Facebook', body.facebook),
-    createSocialEntry('Github', body.github),
-    createSocialEntry('Instagram', body.instagram),
-    createSocialEntry('LinkedIn', body.linkedin),
-    createSocialEntry('Medium', body.medium),
-    createSocialEntry('Reddit', body.reddit),
-    createSocialEntry('Support', body.support),
-    createSocialEntry('Telegram', body.telegram),
-    createSocialEntry('TikTok', body.tiktok),
-    createSocialEntry('Twitter', body.twitter),
-    createSocialEntry('Website', body.website),
-    createSocialEntry('Whitepaper', body.whitepaper),
-    createSocialEntry('Youtube', body.youtube),
+    createSocialEntry('Blog', body.Blog),
+    createSocialEntry('CoinGecko', body.CoinGecko),
+    createSocialEntry('CoinMarketCap', body.CoinMarketCap),
+    createSocialEntry('Discord', body.Discord),
+    createSocialEntry('Documentation', body.Documentation),
+    createSocialEntry('Facebook', body.Facebook),
+    createSocialEntry('Github', body.Github),
+    createSocialEntry('Instagram', body.Instagram),
+    createSocialEntry('LinkedIn', body.LinkedIn),
+    createSocialEntry('Medium', body.Medium),
+    createSocialEntry('Reddit', body.Reddit),
+    createSocialEntry('Support', body.Support),
+    createSocialEntry('Telegram', body.Telegram),
+    createSocialEntry('TikTok', body.TikTok),
+    createSocialEntry('Twitter', body.Twitter),
+    createSocialEntry('Website', body.Website),
+    createSocialEntry('Whitepaper', body.Whitepaper),
+    createSocialEntry('Youtube', body.Youtube),
   ]);
 
 // creating testnet chain
@@ -618,9 +618,9 @@ networkTokenContentfulId = await client
         primaryColor: {
           'en-US': body.primaryColor
         },
-        ...(body.website && {
+        ...(body.Website && {
           officialSite: {
-            'en-US': body.website
+            'en-US': body.Website
           }
         }),
         ...(youtubeResourceLink && { 
