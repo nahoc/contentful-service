@@ -612,8 +612,11 @@ app.post('/create-public-explorer', async function (req, res) {
           'en-US': true
         },
         showInPublicCoreProperties: {
-          'en-US': false,//TODO: change this whenever we're ready
+          'en-US': true,
         },
+        owner: {
+          'en-US': body.account
+        }, // the 0x address that owns this public explorer submission
         primaryColor: {
           'en-US': body.color
         },
