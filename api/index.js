@@ -434,10 +434,9 @@ app.post('/create-project', async function (req, res) {
 // create public explorer entry endpoint
 app.post('/create-public-explorer', async function (req, res) {
   const body = JSON.parse(req.body)
-  const signature = body.signature
 
-  if (!signature || !body.account) {
-    throw 'No signature';
+  if (!body.ownerEmail || !body.account) {
+    throw 'No ownerEmail';
   }
 
   const [ethereumVmContentfulId, subnetContentfulId, networkTokenContentfulId] = await Promise.all([
@@ -608,8 +607,8 @@ app.post('/create-public-explorer', async function (req, res) {
             lower: true,
           })}`,
         },
-        submitterEmail: {
-          'en-US': body.submitterEmail
+        ownerEmail: {
+          'en-US': body.ownerEmail
         },
         isTestnet: {
           'en-US': body.isTestnet
