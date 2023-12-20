@@ -435,8 +435,8 @@ app.post('/create-project', async function (req, res) {
 app.post('/create-public-explorer', async function (req, res) {
   const body = JSON.parse(req.body)
 
-  if (!body.ownerEmail || !body.account) {
-    throw 'No ownerEmail';
+  if (!body.ownerAvaCloudUserId || !body.account) {
+    throw 'No ownerAvaCloudUserId';
   }
 
   const [ethereumVmContentfulId, subnetContentfulId, networkTokenContentfulId] = await Promise.all([
@@ -609,6 +609,9 @@ app.post('/create-public-explorer', async function (req, res) {
         },
         ownerEmail: {
           'en-US': body.ownerEmail
+        },
+        ownerAvaCloudUserId: {
+          'en-US': body.ownerAvaCloudUserId
         },
         isTestnet: {
           'en-US': body.isTestnet
