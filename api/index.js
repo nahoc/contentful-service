@@ -608,8 +608,11 @@ app.post('/create-public-explorer', async function (req, res) {
             lower: true,
           })}`,
         },
+        submitterEmail: {
+          'en-US': body.submitterEmail
+        },
         isTestnet: {
-          'en-US': true
+          'en-US': body.isTestnet
         },
         showInPublicCoreProperties: {
           'en-US': true,
