@@ -439,6 +439,10 @@ app.post('/create-public-explorer', async function (req, res) {
     throw 'No ownerAvaCloudUserId';
   }
 
+  const coreUriSlug = slugify(body.coreUriSlug.replaceAll("'", ""), {
+    lower: true,
+  });
+
   const [ethereumVmContentfulId, subnetContentfulId, networkTokenContentfulId] = await Promise.all([
     client
       .getSpace(CHAIN_ASSETS_CONTENTFUL_SPACE_ID)
@@ -448,6 +452,7 @@ app.post('/create-public-explorer', async function (req, res) {
           fields: {
             evmChainId: { 'en-US': body.evmChainId },
             rpcUrl: { 'en-US': body.rpcUrl },
+            glacierApiUrlOrigin: { 'en-US': `https://glacier-light-api.avax.network/${body.isTestnet ? 'testnet' : 'mainnet'}/${coreUriSlug}` },
             multicall3Address: { 'en-US': body.multicall3Address },
             wsUrl: { 'en-US': body.wsUrl },
           },
@@ -579,8 +584,6 @@ app.post('/create-public-explorer', async function (req, res) {
       },
     }));
 
-    console.log('mergedResourceLinks2', JSON.stringify(mergedResourceLinks2))
-
 // creating testnet chain
   await client
   .getSpace(CHAIN_ASSETS_CONTENTFUL_SPACE_ID)
@@ -598,14 +601,10 @@ app.post('/create-public-explorer', async function (req, res) {
           'en-US': body.description
         },
         coreUriSlug: {
-          'en-US': slugify(body.coreUriSlug.replaceAll("'", ""), {
-            lower: true,
-          }),
+          'en-US': coreUriSlug,
         },
         explorerUrl: {
-          'en-US': `https://subnets-test.avax.network/${slugify(body.coreUriSlug.replaceAll("'", ""), {
-            lower: true,
-          })}`,
+          'en-US': `https://subnets-test.avax.network/${coreUriSlug}`,
         },
         ownerEmail: {
           'en-US': body.ownerEmail
@@ -631,7 +630,7 @@ app.post('/create-public-explorer', async function (req, res) {
           }
         }),
         resourceLinks2: {
-          "en-US": mergedResourceLinks2 || []
+          "en-US": mergedResourceLinks2 || []
         },
         ...(networkTokenContentfulId && { 
           networkToken: {
