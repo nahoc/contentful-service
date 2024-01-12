@@ -452,7 +452,7 @@ app.post('/create-public-explorer', async function (req, res) {
           fields: {
             evmChainId: { 'en-US': body.evmChainId },
             rpcUrl: { 'en-US': body.rpcUrl },
-            ...(body.isFoundersPlan && coreUriSlug && {
+            ...(body.isGlacierLight && coreUriSlug && {
               glacierApiUrlOrigin: {
                 'en-US': `https://glacier-light-api.avax.network/${body.isTestnet ? 'testnet' : 'mainnet'}/${coreUriSlug}`
               }
