@@ -608,7 +608,7 @@ app.post('/create-public-explorer', async function (req, res) {
           'en-US': coreUriSlug,
         },
         explorerUrl: {
-          'en-US': `https://subnets-test.avax.network/${coreUriSlug}`,
+          'en-US': `https://subnets${body.isTestnet ? '-test' : ''}.avax.network/${coreUriSlug}`,
         },
         ownerEmail: {
           'en-US': body.ownerEmail
